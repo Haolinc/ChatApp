@@ -7,7 +7,7 @@
 
     android:id="@+id/chat_page_constraintlayout"
 
-    tools:context=".ChatPageActivity">
+    tools:context=".activity.ChatPageActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chat_page_recycle_view_constraint_layout"

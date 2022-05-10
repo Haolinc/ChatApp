@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.chatapp.R;
+import com.example.chatapp.data.DateDisplay;
+import com.example.chatapp.data.Message;
+import com.example.chatapp.data.PersonalInformation;
 
 import java.util.List;
 

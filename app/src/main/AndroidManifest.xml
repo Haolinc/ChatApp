@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatPageActivity"
+            android:name=".activity.ChatPageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"></activity>
     </application>
 
