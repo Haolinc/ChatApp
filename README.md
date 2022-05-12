@@ -1,5 +1,5 @@
 # ChatApp
-A chatting app that uses the firebase realtime and cloud database.
+A chatting app that uses the firebase realtime and firestore.
 
 # Currently working on:
 
