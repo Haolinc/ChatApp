@@ -2,6 +2,7 @@
 A chatting app that uses the firebase realtime and cloud database.
 
 # Currently working on:
+
 1. Reorganize code (~)
 2. All the fragment functions
   a. Recent chat (✓)
