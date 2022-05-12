@@ -6,7 +6,6 @@ public class Message {
 
 
     public Message(){
-        id = "2";
     }
 
     public Message(String name, String text, long time, String id){
@@ -15,6 +14,7 @@ public class Message {
         this.time = time;
         this.id = id;
     }
+
 
     public String getName() {
         return name;

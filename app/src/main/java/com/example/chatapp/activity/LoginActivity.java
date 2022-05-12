@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.chatapp.Service;
 import com.example.chatapp.data.Database;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
@@ -26,6 +27,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        findViewById(R.id.login_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Service service = new Service();
+                service.hideKeyboard(LoginActivity.this);
+            }
+        });
 
         //login button
         findViewById(R.id.login_login_button).setOnClickListener(new View.OnClickListener() {
@@ -56,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Intent i = new Intent(getBaseContext(), MainActivity.class);
                             PersonalInformation.id = username;
+                            i.putExtra("id", username);
                             finish();
                             startActivity(i);
                         }

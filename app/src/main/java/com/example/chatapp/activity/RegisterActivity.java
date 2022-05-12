@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.chatapp.Service;
 import com.example.chatapp.data.Database;
 import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +34,13 @@ public class RegisterActivity extends AppCompatActivity {
         EditText username = findViewById(R.id.register_username_edittext);
         EditText password1 = findViewById(R.id.register_password_edittext);
         EditText password2 = findViewById(R.id.register_password_again_edittext);
+        findViewById(R.id.register_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Service service = new Service();
+                service.hideKeyboard(RegisterActivity.this);
+            }
+        });
         textView = findViewById(R.id.register_textview);
         findViewById(R.id.register_register_button).setOnClickListener(new View.OnClickListener() {
             @Override

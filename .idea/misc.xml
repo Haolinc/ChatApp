@@ -6,12 +6,18 @@
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2265" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout-v23/activity_chat_page.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_chat_fragment.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_chat_me.xml" value="0.1" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_chat_other.xml" value="0.5" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_chat_page.xml" value="0.33" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/activity_register.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/chat_fragment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/chat_framgnet_list_item.xml" value="0.33" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/chat_me_list_item.xml" value="0.33" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/chat_other_list_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/content_scrolling.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/fragment_main.xml" value="0.33" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/layout/main_fragment_tab.xml" value="0.33" />
         <entry key="..\:/Users/forsk/AndroidStudioProjects/ChatApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2265" />

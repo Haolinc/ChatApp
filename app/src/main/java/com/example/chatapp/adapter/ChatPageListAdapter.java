@@ -1,7 +1,6 @@
 package com.example.chatapp.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +41,12 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
         View view;
         if (viewType == SENT){
             view = LayoutInflater.from(context)
-                    .inflate(R.layout.activity_chat_me, parent, false);
+                    .inflate(R.layout.chat_me_list_item, parent, false);
             return new SendAdapter(view);
         }
         else if (viewType == RECEIVE){
             view = LayoutInflater.from(context)
-                    .inflate(R.layout.activity_chat_other, parent, false);
+                    .inflate(R.layout.chat_other_list_item, parent, false);
             return new ReceiveAdapter(view);
         }
         return null;
@@ -57,7 +56,6 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messageList.get(position);
-        Log.d("onBindHolder: ", ""+position);
         switch (holder.getItemViewType()){
             case SENT:
                 ((SendAdapter) holder).bind(message);
@@ -74,7 +72,7 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
 
 
 
-    private class SendAdapter extends RecyclerView.ViewHolder {
+    private static class SendAdapter extends RecyclerView.ViewHolder {
         TextView chatmeText, chatmeTime;
         public SendAdapter(@NonNull View itemView) {
             super(itemView);
@@ -88,7 +86,7 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private class ReceiveAdapter extends RecyclerView.ViewHolder{
+    private static class ReceiveAdapter extends RecyclerView.ViewHolder{
         TextView chatotherName, chatotherText, chatotherTime;
         public ReceiveAdapter(@NonNull View itemView) {
             super(itemView);
