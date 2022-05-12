@@ -15,14 +15,17 @@ A chatting app that uses the firebase realtime and cloud database.
 <p>
   <img src="ScreenShot/loginpage.PNG" width="338" height="600">
 </p>
+
 ## register page
 <p>
   <img src="ScreenShot/registerpage.PNG" width="338" height="600">
 </p>
+
 ## recent chat page
 <p>
   <img src="ScreenShot/recentchatpage.PNG" width="338" height="600">
 </p>
+
 ## chat page
 <p>
   <img src="ScreenShot/chatpage.PNG" width="338" height="600">
