@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
@@ -58,24 +61,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void accountVerification(String username, String password){
-        users.whereEqualTo(username, password).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            Intent i = new Intent(getBaseContext(), MainActivity.class);
-                            PersonalInformation.id = username;
-                            i.putExtra("id", username);
-                            finish();
-                            startActivity(i);
-                        }
-                        else{
-                            TextView textView = findViewById(R.id.login_invalidlogin_textview);
-                            textView.setText("Username or password does not match!");
-                            textView.setTextColor(Color.RED);
-                        }
+        users.document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().getString("password") == null){
+                    TextView textView = findViewById(R.id.login_invalidlogin_textview);
+                    textView.setText("Username does not exist!");
+                    textView.setTextColor(Color.RED);
+                }
+                else {
+                    if (task.getResult().getString("password").equals(password)){
+                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        PersonalInformation.id = username;
+                        i.putExtra("id", username);
+                        startActivity(i);
+                        finish();
                     }
-                });
+                    else{
+                        TextView textView = findViewById(R.id.login_invalidlogin_textview);
+                        textView.setText("Password does not match!");
+                        textView.setTextColor(Color.RED);
+                    }
+                }
+            }
+        });
     }
 
 }
