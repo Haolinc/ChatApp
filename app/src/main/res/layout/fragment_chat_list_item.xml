@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/chat_fragment_list_imageView"
-            android:layout_width="60dp"
+            android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"

@@ -6,25 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.chatapp.Service;
-import com.example.chatapp.data.Database;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
-    CollectionReference users = new Database().getUsers();
+    CollectionReference users = FirebaseFirestore.getInstance().collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.login_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Service service = new Service();
-                service.hideKeyboard(LoginActivity.this);
+                new Service().hideKeyboard(LoginActivity.this);
             }
         });
 
@@ -61,6 +58,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void accountVerification(String username, String password){
+        users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+            }
+        });
+
         users.document(username).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

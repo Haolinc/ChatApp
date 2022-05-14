@@ -46,8 +46,6 @@ public class ChatPageActivity extends AppCompatActivity {
     private List <Message> list = new LinkedList<>();
     private ChatFragmentData receiverData;
     private EditText editText;
-    private Service service;
-    boolean firstTime = true;
 
 
     // realtime firebase example code:
@@ -70,8 +68,7 @@ public class ChatPageActivity extends AppCompatActivity {
         messageRecycler.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                service = new Service();
-                service.hideKeyboard(ChatPageActivity.this);
+                new Service().hideKeyboard(ChatPageActivity.this);
                 return true;
             }
         });
@@ -82,35 +79,16 @@ public class ChatPageActivity extends AppCompatActivity {
             //this method will call when started
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int count = 1;
-                    userReference.child("setUp").child("totalUnread").setValue(0);
+
+                //set unread hint in recent chat page to 0 whenever start chatting
+                userReference.child("setUp").child("totalUnread").setValue(0);
                 List<Message> newList = new LinkedList<>();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    //ignore setup child
                     if (!dataSnapshot.getKey().equals("setUp"))
                         newList.add(dataSnapshot.getValue(Message.class));
                 }
                 list = newList;
-//                if (firstTime) {
-//                    firstTime = false;
-//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                        if (dataSnapshot.getKey().equals("setUp")){
-//                            continue;
-//                        }
-//                        list.add(dataSnapshot.getValue(Message.class));
-//                    }
-//                } else {
-//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                        Message msg = dataSnapshot.getValue(Message.class);
-//                        Log.d("chatpagedebug: ", ""+msg.getText());
-//                        if (count == snapshot.getChildrenCount()-1 && !msg.getId().equals(PersonalInformation.id)){
-//                            list.add(dataSnapshot.getValue(Message.class));
-//
-//                        }
-//
-//                        count++;
-//                    }
-//                }
-
                 adapterSetting();
             }
 
@@ -123,17 +101,18 @@ public class ChatPageActivity extends AppCompatActivity {
 
 
         editText = findViewById(R.id.chat_page_edittext);
-        //button
+
+        //send button
         findViewById(R.id.chat_page_send_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getTotalUnread(targetID);
+                sendToTarget(targetID);
             }
         });
     }
 
 
-    private void getTotalUnread(String targetID){
+    private void sendToTarget(String targetID){
         receiverReference.child(PersonalInformation.id).child("setUp")
                 .get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override

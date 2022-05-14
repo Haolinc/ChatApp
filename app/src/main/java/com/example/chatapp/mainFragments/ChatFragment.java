@@ -2,13 +2,11 @@ package com.example.chatapp.mainFragments;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,18 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.R;
 import com.example.chatapp.adapter.ChatFragmentAdapter;
 import com.example.chatapp.data.ChatFragmentData;
-import com.example.chatapp.data.Message;
-import com.example.chatapp.data.PersonalInformation;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +31,7 @@ public class ChatFragment extends Fragment {
     private String personalID;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.chat_fragment, container, true);
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, true);
         messageRecycler = rootView.findViewById(R.id.chat_fragment_recycler_view);
         personalID = getActivity().getIntent().getStringExtra("id");
         getAllRecentFromRealtimeDatabase();

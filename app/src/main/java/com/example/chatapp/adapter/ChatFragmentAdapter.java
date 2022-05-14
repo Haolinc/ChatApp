@@ -2,8 +2,6 @@ package com.example.chatapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.R;
 import com.example.chatapp.activity.ChatPageActivity;
 import com.example.chatapp.data.ChatFragmentData;
-import com.example.chatapp.data.Message;
-import com.example.chatapp.data.PersonalInformation;
-import com.example.chatapp.mainFragments.ChatFragment;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -39,7 +30,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MessageAdaptor(LayoutInflater.from(context).inflate(R.layout.chat_framgnet_list_item, parent, false), context);
+        return new MessageAdaptor(LayoutInflater.from(context).inflate(R.layout.fragment_chat_list_item, parent, false), context);
     }
 
     @Override
@@ -71,7 +62,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
         }
 
         //setup textview and onClickListener
-        public void bind(ChatFragmentData message){
+        private void bind(ChatFragmentData message){
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

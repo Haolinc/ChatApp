@@ -11,18 +11,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.chatapp.Service;
-import com.example.chatapp.data.Database;
 import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Database database = new Database();
 
     TextView textView;
 
@@ -37,8 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.register_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Service service = new Service();
-                service.hideKeyboard(RegisterActivity.this);
+                new Service().hideKeyboard(RegisterActivity.this);
             }
         });
         textView = findViewById(R.id.register_textview);
@@ -64,14 +63,15 @@ public class RegisterActivity extends AppCompatActivity {
     //cloud database is asynchronous, so if want to change textview's text, we must
     //put it inside the get().addOnComplete so it will change AFTER the process is done
     private void createAccount(String username, String password){
-        database.getUsers().document(username).get()
+        CollectionReference users = FirebaseFirestore.getInstance().collection("users");
+        users.document(username).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (!task.isSuccessful() || !task.getResult().exists()){
                             Map<String, Object> map = new HashMap<>();
                             map.put(username, password);
-                            database.getUsers().document(username).set(map);
+                            users.document(username).set(map);
                             setTextView("Account Created!", Color.GREEN);
                         }
                         else

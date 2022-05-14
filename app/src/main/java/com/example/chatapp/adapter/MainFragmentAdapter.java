@@ -23,13 +23,6 @@ public class MainFragmentAdapter extends FragmentStateAdapter {
         super(fragmentActivity);
     }
 
-    public MainFragmentAdapter(@NonNull Fragment fragment) {
-        super(fragment);
-    }
-
-    public MainFragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-        super(fragmentManager, lifecycle);
-    }
 
     @NonNull
     @Override
