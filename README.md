@@ -6,7 +6,7 @@ A chatting app that uses the firebase realtime and firestore.
 1. Reorganize code (~)
 2. Implement name functions into the code (~)
 3. Fix problem in recyclerview for not appearing at top when typing (~)
-4. All the fragment functions: (recent chat ✓, contact list ✓, my profile ~)
+4. All the fragment functions: (recent chat ✓, contact list ~, my profile ~)
 5. Night mode
 6. Regex on username and password
 7. Restriction on accessing firebase
