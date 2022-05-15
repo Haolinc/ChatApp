@@ -39,7 +39,7 @@ public class ContactProfileActivity extends AppCompatActivity {
     private void setUpViews(){
         String targetName = getIntent().getStringExtra("name");
         name.setText(targetName);
-//        image.setImageResource(R.drawable.userprofileimg);
+        image.setImageResource(R.drawable.userprofileimg);
         if (getIntent().getBooleanExtra("isFriend", false)){
             addOrSendButton.setText("Send Message");
             addOrSendButton.setOnClickListener(new View.OnClickListener() {
