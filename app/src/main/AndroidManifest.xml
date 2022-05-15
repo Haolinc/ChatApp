@@ -10,13 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
-            android:name=".fragment_contact_listitem"
-            android:exported="false" />
-        <activity
-            android:name=".ChatFramgnetListItem"
-            android:exported="false" />
-        <activity
-            android:name=".chat_fragment"
+            android:name=".activity.ContactProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"

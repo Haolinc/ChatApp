@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chatapp.Service;
 import com.example.chatapp.R;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText username = findViewById(R.id.register_username_edittext);
         EditText password1 = findViewById(R.id.register_password_edittext);
         EditText password2 = findViewById(R.id.register_password_again_edittext);
+        EditText name = findViewById(R.id.register_name_edittext);
         findViewById(R.id.register_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String password1String = password1.getText().toString();
                 String password2String = password2.getText().toString();
                 String usernameString = username.getText().toString();
+                String nameString = name.getText().toString();
                 Log.d("password1String:", password1String);
                 Log.d("password2String:", password2String);
                 Log.d("usernameString:", usernameString);
@@ -54,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
                     setTextView("Password Not Match!", Color.RED);
                 }
                 else
-                    createAccount(usernameString, password1String);
+                    createAccount(usernameString, password1String, nameString);
 
             }
         });
@@ -62,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //cloud database is asynchronous, so if want to change textview's text, we must
     //put it inside the get().addOnComplete so it will change AFTER the process is done
-    private void createAccount(String username, String password){
+    private void createAccount(String username, String password, String name){
         CollectionReference users = FirebaseFirestore.getInstance().collection("users");
         users.document(username).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -70,9 +73,13 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (!task.isSuccessful() || !task.getResult().exists()){
                             Map<String, Object> map = new HashMap<>();
-                            map.put(username, password);
+                            map.put("password", password);
+                            map.put("name", name);
+
                             users.document(username).set(map);
                             setTextView("Account Created!", Color.GREEN);
+                            Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                         else
                             setTextView("Username Has Used!", Color.RED);

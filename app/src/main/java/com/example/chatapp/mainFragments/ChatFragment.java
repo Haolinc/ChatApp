@@ -58,7 +58,7 @@ public class ChatFragment extends Fragment {
                     if (msgList.size() == 1)
                         continue;
                     HashMap<String, Object> newMap = (HashMap<String, Object>)  msgList.get("setUp");
-                    newList.add(new ChatFragmentData((int)((long)newMap.get("totalUnread")), dataSnapshot.getKey(), (String)newMap.get("latestText")));
+                    newList.add(new ChatFragmentData((int)((long)newMap.get("totalUnread")), dataSnapshot.getKey(), (String)newMap.get("targetName"), (String)newMap.get("latestText"), (String)newMap.get("latestTextName")));
                 }
                 Log.d("newList", newList.size()+"");
                 messageList = newList;

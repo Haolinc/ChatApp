@@ -44,7 +44,7 @@ public class ChatPageActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;
     private ChatPageListAdapter messageAdapter;
     private List <Message> list = new LinkedList<>();
-    private ChatFragmentData receiverData;
+    private ChatFragmentData setupData;
     private EditText editText;
 
 
@@ -61,7 +61,7 @@ public class ChatPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_page);
         String targetID = getIntent().getStringExtra("id");
         userReference = parentReference.child(PersonalInformation.id).child(targetID);
-        receiverReference = parentReference.child(targetID);
+        receiverReference = parentReference.child(targetID).child(PersonalInformation.id);
 
 
         messageRecycler = findViewById(R.id.chat_page_recycle_view);
@@ -113,7 +113,7 @@ public class ChatPageActivity extends AppCompatActivity {
 
 
     private void sendToTarget(String targetID){
-        receiverReference.child(PersonalInformation.id).child("setUp")
+        receiverReference.child("setUp")
                 .get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
@@ -127,13 +127,25 @@ public class ChatPageActivity extends AppCompatActivity {
 
     private void updateMessageDatabase(int totalUnread, String targetID){
         long currentTime = Calendar.getInstance().getTimeInMillis();
-        Message msg = new Message("", editText.getText().toString(),currentTime,PersonalInformation.id);
-        receiverData = new ChatFragmentData(totalUnread+1, "", msg.getText());
-        userReference.push().setValue(msg);    // REAL-TIME DATABASE CODE
-        receiverReference.child(PersonalInformation.id).child("setUp").setValue(receiverData);
-        userReference.child("setUp").setValue(receiverData);
-        receiverReference.child(PersonalInformation.id).push().setValue(msg);
+        String targetName = getIntent().getStringExtra("name");
 
+
+        Message msg = new Message(PersonalInformation.name, editText.getText().toString(),currentTime,PersonalInformation.id);
+        setupData = new ChatFragmentData(totalUnread+1, targetID, targetName, msg.getText(), PersonalInformation.name);
+        Log.d("targetname", setupData.getTargetName());
+        Log.d("rData1", setupData.toString());
+
+        userReference.push().setValue(msg);    // REAL-TIME DATABASE CODE
+
+        userReference.child("setUp").setValue(setupData);
+
+        userReference.child("setUp").child("targetName").setValue(targetName);
+
+
+        ChatFragmentData setupData2 = new ChatFragmentData(totalUnread+1, PersonalInformation.id, PersonalInformation.name, msg.getText(), PersonalInformation.name);
+        Log.d("rData2", setupData2.toString());
+        receiverReference.push().setValue(msg);
+        receiverReference.child("setUp").setValue(setupData2);
         editText.setText("");
     }
 
@@ -145,9 +157,4 @@ public class ChatPageActivity extends AppCompatActivity {
         messageRecycler.scrollToPosition(list.size()-1);
     }
 
-
-    public void hideKeyboard(View view){
-        InputMethodManager inputMethodManager = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(this.getWindow().getDecorView().getRootView().getWindowToken(), 0);
-    }
 }

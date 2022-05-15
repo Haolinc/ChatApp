@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     if (task.getResult().getString("password").equals(password)){
                         Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        PersonalInformation.name = task.getResult().getString("name");
                         PersonalInformation.id = username;
                         i.putExtra("id", username);
                         startActivity(i);

@@ -62,28 +62,30 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
         }
 
         //setup textview and onClickListener
-        private void bind(ChatFragmentData message){
+        private void bind(ChatFragmentData setupContent){
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, ChatPageActivity.class);
-                    i.putExtra("id", message.getId());
+                    i.putExtra("id", setupContent.getId());
+                    i.putExtra("name", setupContent.getTargetName());
                     context.startActivity(i);
                 }
             });
-            if (message.getTotalUnread()>99)
+            if (setupContent.getTotalUnread()>99)
                 unread.setText("99+");
             else
-                unread.setText(message.getTotalUnread()+"");
+                unread.setText(setupContent.getTotalUnread()+"");
 
-            if (message.getLatestText().length()>40)
-                recent.setText(message.getLatestText().substring(0, 40) + "...");
+            String latestMessage = setupContent.getLatestTextName() + ": " + setupContent.getLatestText();
+            if (latestMessage.length()>40)
+                recent.setText(latestMessage.substring(0, 40) + "...");
             else
-                recent.setText(message.getLatestText());
+                recent.setText(latestMessage);
 
             imageView.setImageResource(R.drawable.userprofileimg);
 
-            name.setText(message.getId());
+            name.setText(setupContent.getTargetName());
         }
 
     }

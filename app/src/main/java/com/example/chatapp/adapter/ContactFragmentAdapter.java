@@ -68,6 +68,7 @@ public class ContactFragmentAdapter extends RecyclerView.Adapter {
                 public void onClick(View view) {
                     Intent i = new Intent(context, ChatPageActivity.class);
                     i.putExtra("id", friendData.getId());
+                    i.putExtra("name", friendData.getName());
                     context.startActivity(i);
                 }
             });

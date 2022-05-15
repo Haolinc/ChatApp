@@ -1,5 +1,5 @@
 package com.example.chatapp.data;
 
 public class PersonalInformation {
-    public static String id;
+    public static String id, name;
 }
