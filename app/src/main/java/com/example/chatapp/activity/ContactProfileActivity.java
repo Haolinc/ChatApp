@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import com.example.chatapp.R;
 import com.example.chatapp.data.PersonalInformation;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,7 @@ public class ContactProfileActivity extends AppCompatActivity {
     Button addOrSendButton;
     ImageView image;
     String targetID;
+    String userDocument;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class ContactProfileActivity extends AppCompatActivity {
         addOrSendButton = findViewById(R.id.contact_profile_addFriendOrSend_button);
         image = findViewById(R.id.contact_profile_imageView);
         targetID = getIntent().getStringExtra("id");
+        userDocument = getIntent().getStringExtra("userDocument");
 
         setUpViews();
     }
@@ -60,13 +64,26 @@ public class ContactProfileActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", targetID);
-                    map.put("name", targetName);
+
+                    //self document
                     FirebaseFirestore.getInstance()
                             .collection("users")
-                            .document(PersonalInformation.id)
+                            .document(PersonalInformation.userDocument)
                             .collection("friends")
                             .document()
                             .set(map);
+
+                    map.put("id", PersonalInformation.id);
+
+                    //target document
+                    FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(userDocument)
+                            .collection("friends")
+                            .document()
+                            .set(map);
+
+
                     Toast.makeText(ContactProfileActivity.this, "Added", Toast.LENGTH_SHORT).show();
                     finish();
                 }

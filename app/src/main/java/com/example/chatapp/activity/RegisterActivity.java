@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,22 +68,27 @@ public class RegisterActivity extends AppCompatActivity {
     //put it inside the get().addOnComplete so it will change AFTER the process is done
     private void createAccount(String username, String password, String name){
         CollectionReference users = FirebaseFirestore.getInstance().collection("users");
-        users.document(username).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        users.whereEqualTo("id", username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (!task.isSuccessful() || !task.getResult().exists()){
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("password", password);
-                            map.put("name", name);
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            if (task.getResult().isEmpty()){
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("password", password);
+                                map.put("name", name);
+                                map.put("id", username);
 
-                            users.document(username).set(map);
-                            setTextView("Account Created!", Color.GREEN);
-                            Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
-                            finish();
+                                users.document().set(map);
+                                Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            else
+                                setTextView("Username Has Used!", Color.RED);
                         }
                         else
-                            setTextView("Username Has Used!", Color.RED);
+                            Toast.makeText(RegisterActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

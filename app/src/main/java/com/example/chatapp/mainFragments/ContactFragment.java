@@ -21,14 +21,18 @@ import com.example.chatapp.activity.ChatPageActivity;
 import com.example.chatapp.activity.ContactProfileActivity;
 import com.example.chatapp.adapter.ContactFragmentAdapter;
 import com.example.chatapp.data.FriendData;
+import com.example.chatapp.data.PersonalInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 
 import java.util.LinkedList;
@@ -40,7 +44,7 @@ public class ContactFragment extends Fragment {
     private TextView text;
     private ContactFragmentAdapter contactFragmentAdapter;
     private List<FriendData> friendList = new LinkedList<>();
-    private CollectionReference fireStoreFriendList;
+    private CollectionReference fireStoreFriendListReference;
     private String personalID;
     private CollectionReference users = FirebaseFirestore.getInstance().collection("users");
 
@@ -49,57 +53,48 @@ public class ContactFragment extends Fragment {
         friendListRecyclerView = rootView.findViewById(R.id.contact_fragment_recyclerview);
         personalID =getActivity().getIntent().getStringExtra("id");
         text = rootView.findViewById(R.id.contact_fragment_textview);
-        fireStoreFriendList = FirebaseFirestore.getInstance().collection("users").document(personalID).collection("friends");
+        fireStoreFriendListReference = FirebaseFirestore.getInstance().collection("users").document(PersonalInformation.userDocument).collection("friends");
 
         //find friend process
         rootView.findViewById(R.id.contact_fragment_add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String targetID = ((EditText)rootView.findViewById(R.id.contact_fragment_edittext)).getText().toString();
-                Log.d("targetID", targetID);
                 if (targetID.equals("")){
                     changeText("Field cannot be empty!");
                 }
                 else if (targetID.equals(personalID))
                     changeText("Cannot add yourself to contact!");
                 else{
-                    users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    users.whereEqualTo("id", targetID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            boolean foundAccount = false;
-                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                                String id = queryDocumentSnapshot.getId();
-                                if (id.equals(targetID)) {
-                                    Map<String, Object> userInfo = queryDocumentSnapshot.getData();
-                                    Intent i = new Intent(getContext(), ContactProfileActivity.class);
-
-                                    //send intent extras
-                                    i.putExtra("id", targetID);
-                                    i.putExtra("name", (String) userInfo.get("name"));
-
-                                    //check if target already friend
-                                    users.document(personalID)
-                                            .collection("friends")
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    for(DocumentSnapshot documentSnapshot : task.getResult()){
-                                                        Map<String, Object> friendListMap = documentSnapshot.getData();
-                                                        if (targetID.equals(friendListMap.get("id"))){
-                                                            i.putExtra("isFriend", true);
-                                                            returnToNormalText();
-                                                        }
-                                                    }
-                                                    startActivity(i);
+                            if (!task.getResult().isEmpty()){
+                                Intent i = new Intent(getContext(), ContactProfileActivity.class);
+                                List<DocumentSnapshot> documentList = task.getResult().getDocuments();
+                                //send intent extras
+                                i.putExtra("id", targetID);
+                                i.putExtra("name", (String) documentList.get(0).get("name"));
+                                i.putExtra("userDocument", documentList.get(0).getId());
+                                Log.d("userdoc",documentList.get(0).getId());
+                                //find if target is friend already
+                                fireStoreFriendListReference
+                                        .whereEqualTo("id", targetID)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (!task.getResult().isEmpty()){
+                                                    i.putExtra("isFriend", true);
                                                 }
-                                            });
-                                    foundAccount = true;
-                                    break;
-                                }
+                                                startActivity(i);
+
+                                            }
+                                        });
                             }
-                            if (!foundAccount)
+                            else{
                                 changeText("User not found");
+                            }
                         }
                     });
                 }
@@ -113,7 +108,6 @@ public class ContactFragment extends Fragment {
             }
         });
 
-        getFriendListFromFireStore();
 
 
         return rootView;
@@ -142,20 +136,34 @@ public class ContactFragment extends Fragment {
         friendListRecyclerView.setAdapter(contactFragmentAdapter);
     }
 
+
     private void getFriendListFromFireStore(){
-        fireStoreFriendList.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //Reference to find users by id
+        CollectionReference userReference = FirebaseFirestore.getInstance().collection("users");
+
+        //Document names;
+        fireStoreFriendListReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.getResult().isEmpty())
-                    Log.d("testTask1", "yes");
-                else{
-                    List<FriendData> newFriendList = new LinkedList<>();
+                if (!task.getResult().isEmpty()){
+                    friendList.clear();
+                    //get friend ids
+                    List<String> idList = new LinkedList<>();
                     for(QueryDocumentSnapshot querySnapshot : task.getResult()){
-                        Map<String, Object> map = querySnapshot.getData();
-                        newFriendList.add(new FriendData((String)map.get("id"), (String)map.get("name")));
+                        idList.add((String)querySnapshot.getData().get("id"));
                     }
-                    friendList = newFriendList;
-                    updateView();
+
+                    //base in ids put them into friendList
+                    userReference.whereIn("id", idList).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                                friendList.add(new FriendData(documentSnapshot.getString("id"),documentSnapshot.getString("name")));
+                            }
+                            updateView();
+                        }
+                    });
+
                 }
             }
         });
