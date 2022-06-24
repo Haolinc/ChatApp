@@ -1,7 +1,6 @@
-package com.example.chatapp.adapter;
+package com.example.chatapp.mainFragments.contact;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -13,10 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chatapp.R;
-import com.example.chatapp.Service;
-import com.example.chatapp.activity.ChatPageActivity;
+import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.example.chatapp.data.FriendData;
-import com.example.chatapp.mainFragments.ContactFragment;
 
 import java.util.List;
 

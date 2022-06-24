@@ -1,4 +1,4 @@
-package com.example.chatapp.adapter;
+package com.example.chatapp.mainFragments.recentChat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
-import com.example.chatapp.activity.ChatPageActivity;
+import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.example.chatapp.data.ChatFragmentData;
 
 import java.util.List;

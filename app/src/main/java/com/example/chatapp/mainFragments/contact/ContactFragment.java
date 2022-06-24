@@ -1,4 +1,4 @@
-package com.example.chatapp.mainFragments;
+package com.example.chatapp.mainFragments.contact;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,27 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
-import com.example.chatapp.activity.ChatPageActivity;
-import com.example.chatapp.activity.ContactProfileActivity;
-import com.example.chatapp.adapter.ContactFragmentAdapter;
 import com.example.chatapp.data.FriendData;
 import com.example.chatapp.data.PersonalInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Text;
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class ContactFragment extends Fragment {
     private RecyclerView friendListRecyclerView;

@@ -15,10 +15,10 @@ import android.widget.Toast;
 import com.example.chatapp.Service;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
+import com.example.chatapp.mainFragments.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -60,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void accountVerification(String username, String password){
-        users.whereEqualTo("id", username).whereEqualTo("password", password)
+        users.whereEqualTo("id", username)
+                .whereEqualTo("password", password)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

@@ -1,18 +1,11 @@
-package com.example.chatapp.activity;
+package com.example.chatapp.mainFragments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.EditText;
 
 import com.example.chatapp.R;
-import com.example.chatapp.activity.ChatPageActivity;
-import com.example.chatapp.adapter.MainFragmentAdapter;
-import com.example.chatapp.mainFragments.ChatFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

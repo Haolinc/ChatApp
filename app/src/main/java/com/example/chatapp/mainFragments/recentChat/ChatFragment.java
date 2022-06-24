@@ -1,4 +1,4 @@
-package com.example.chatapp.mainFragments;
+package com.example.chatapp.mainFragments.recentChat;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
-import com.example.chatapp.adapter.ChatFragmentAdapter;
 import com.example.chatapp.data.ChatFragmentData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,4 +1,4 @@
-package com.example.chatapp.activity;
+package com.example.chatapp.mainFragments.contact;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,10 +12,8 @@ import android.widget.Toast;
 
 import com.example.chatapp.R;
 import com.example.chatapp.data.PersonalInformation;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;

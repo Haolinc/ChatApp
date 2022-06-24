@@ -1,4 +1,4 @@
-package com.example.chatapp.adapter;
+package com.example.chatapp.mainFragments.chat;
 
 import android.content.Context;
 import android.view.LayoutInflater;

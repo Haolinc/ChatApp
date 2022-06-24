@@ -1,4 +1,4 @@
-package com.example.chatapp.activity;
+package com.example.chatapp.mainFragments.chat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,39 +6,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.example.chatapp.adapter.ChatFragmentAdapter;
-import com.example.chatapp.adapter.ChatPageListAdapter;
 import com.example.chatapp.data.ChatFragmentData;
 import com.example.chatapp.data.Message;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class ChatPageActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;

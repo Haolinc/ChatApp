@@ -1,18 +1,13 @@
-package com.example.chatapp.adapter;
+package com.example.chatapp.mainFragments;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.chatapp.mainFragments.ChatFragment;
-import com.example.chatapp.mainFragments.ContactFragment;
-import com.example.chatapp.mainFragments.ProfileFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.chatapp.mainFragments.recentChat.ChatFragment;
+import com.example.chatapp.mainFragments.contact.ContactFragment;
+import com.example.chatapp.mainFragments.profile.ProfileFragment;
 
 public class MainFragmentAdapter extends FragmentStateAdapter {
 

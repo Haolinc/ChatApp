@@ -10,7 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
-            android:name=".activity.ContactProfileActivity"
+            android:name=".mainFragments.profile.NameChangeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FragmentProfileListitemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mainFragments.contact.ContactProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"
@@ -26,11 +32,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ChatPageActivity"
+            android:name=".mainFragments.chat.ChatPageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".mainFragments.MainActivity"
             android:exported="true" />
     </application>
 
