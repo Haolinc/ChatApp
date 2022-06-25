@@ -87,16 +87,14 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
     }
 
     private static class ReceiveAdapter extends RecyclerView.ViewHolder{
-        TextView chatotherName, chatotherText, chatotherTime;
+        TextView chatotherText, chatotherTime;
         public ReceiveAdapter(@NonNull View itemView) {
             super(itemView);
             chatotherText = (TextView) itemView.findViewById(R.id.chatother_text);
             chatotherTime = (TextView) itemView.findViewById(R.id.chatother_time);
-            chatotherName = (TextView) itemView.findViewById(R.id.chatother_name);
         }
 
         void bind(Message message){
-            chatotherName.setText(message.getName());
             chatotherText.setText(message.getText());
             chatotherTime.setText(new DateDisplay(message.getTime()).returnCurrentTime());
         }

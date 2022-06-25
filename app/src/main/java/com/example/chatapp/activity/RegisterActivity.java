@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.register_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Service().hideKeyboard(RegisterActivity.this);
+                Service.hideKeyboard(RegisterActivity.this);
             }
         });
         textView = findViewById(R.id.register_textview);

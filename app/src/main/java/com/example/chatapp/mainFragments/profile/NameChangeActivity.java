@@ -5,17 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.chatapp.R;
-import com.example.chatapp.activity.RegisterActivity;
+import com.example.chatapp.Service;
+import com.example.chatapp.data.FireStoreDataReference;
 import com.example.chatapp.data.PersonalInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -31,15 +29,21 @@ public class NameChangeActivity extends AppCompatActivity {
         EditText nameChangeEdit = findViewById(R.id.name_change_edit_text);
         nameChangeEdit.setText(PersonalInformation.name);
 
+        findViewById(R.id.name_change_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Service.hideKeyboard(NameChangeActivity.this);
+            }
+        });
+
         //change name confirm button
         findViewById(R.id.name_change_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String currentName = nameChangeEdit.getText().toString();
-                CollectionReference users = FirebaseFirestore.getInstance().collection("users");
 
                 //update name in firestore
-                users.whereEqualTo("id", PersonalInformation.id)
+                FireStoreDataReference.getUsersReference().whereEqualTo("id", PersonalInformation.id)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -48,7 +52,7 @@ public class NameChangeActivity extends AppCompatActivity {
                                     PersonalInformation.name = currentName;
                                     Map<String, Object> updateMap = new HashMap<>();
                                     updateMap.put("name", currentName);
-                                    users.document(PersonalInformation.userDocument).update(updateMap);
+                                    FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument).update(updateMap);
                                     Toast.makeText(NameChangeActivity.this, "Name Changed", Toast.LENGTH_SHORT).show();
                                     finish();
                                 }

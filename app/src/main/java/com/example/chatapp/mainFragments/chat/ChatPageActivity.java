@@ -48,15 +48,16 @@ public class ChatPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_page);
         String targetID = getIntent().getStringExtra("id");
+        String targetName = getIntent().getStringExtra("name");
         userReference = parentReference.child(PersonalInformation.id).child(targetID);
         receiverReference = parentReference.child(targetID).child(PersonalInformation.id);
-
+        getSupportActionBar().setTitle(targetName);
 
         messageRecycler = findViewById(R.id.chat_page_recycle_view);
         messageRecycler.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                new Service().hideKeyboard(ChatPageActivity.this);
+                Service.hideKeyboard(ChatPageActivity.this);
                 return true;
             }
         });
@@ -119,7 +120,7 @@ public class ChatPageActivity extends AppCompatActivity {
 
 
         Message msg = new Message(PersonalInformation.name, editText.getText().toString(),currentTime,PersonalInformation.id);
-        setupData = new ChatFragmentData(totalUnread+1, targetID, targetName, msg.getText(), PersonalInformation.name);
+        setupData = new ChatFragmentData(totalUnread+1, targetID, targetName, msg.getText());
         Log.d("targetname", setupData.getTargetName());
         Log.d("rData1", setupData.toString());
 
@@ -130,7 +131,7 @@ public class ChatPageActivity extends AppCompatActivity {
         userReference.child("setUp").child("targetName").setValue(targetName);
 
 
-        ChatFragmentData setupData2 = new ChatFragmentData(totalUnread+1, PersonalInformation.id, PersonalInformation.name, msg.getText(), PersonalInformation.name);
+        ChatFragmentData setupData2 = new ChatFragmentData(totalUnread+1, PersonalInformation.id, PersonalInformation.name, msg.getText());
         Log.d("rData2", setupData2.toString());
         receiverReference.push().setValue(msg);
         receiverReference.child("setUp").setValue(setupData2);

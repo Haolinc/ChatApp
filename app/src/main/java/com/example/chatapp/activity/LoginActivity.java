@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.login_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Service().hideKeyboard(LoginActivity.this);
+                Service.hideKeyboard(LoginActivity.this);
             }
         });
 

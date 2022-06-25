@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
+import com.example.chatapp.data.FireStoreDataReference;
 import com.example.chatapp.data.FriendData;
 import com.example.chatapp.data.PersonalInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,16 +37,13 @@ public class ContactFragment extends Fragment {
     private TextView text;
     private ContactFragmentAdapter contactFragmentAdapter;
     private List<FriendData> friendList = new LinkedList<>();
-    private CollectionReference fireStoreFriendListReference;
     private String personalID;
-    private CollectionReference users = FirebaseFirestore.getInstance().collection("users");
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_contact, container, true);
         friendListRecyclerView = rootView.findViewById(R.id.contact_fragment_recyclerview);
         personalID =getActivity().getIntent().getStringExtra("id");
         text = rootView.findViewById(R.id.contact_fragment_textview);
-        fireStoreFriendListReference = FirebaseFirestore.getInstance().collection("users").document(PersonalInformation.userDocument).collection("friends");
 
         //find friend process
         rootView.findViewById(R.id.contact_fragment_add_button).setOnClickListener(new View.OnClickListener() {
@@ -58,7 +56,9 @@ public class ContactFragment extends Fragment {
                 else if (targetID.equals(personalID))
                     changeText("Cannot add yourself to contact!");
                 else{
-                    users.whereEqualTo("id", targetID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    FireStoreDataReference.getUsersReference().whereEqualTo("id", targetID)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (!task.getResult().isEmpty()){
@@ -70,7 +70,7 @@ public class ContactFragment extends Fragment {
                                 i.putExtra("userDocument", documentList.get(0).getId());
                                 Log.d("userdoc",documentList.get(0).getId());
                                 //find if target is friend already
-                                fireStoreFriendListReference
+                                FireStoreDataReference.getFriendListReference()
                                         .whereEqualTo("id", targetID)
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -96,7 +96,7 @@ public class ContactFragment extends Fragment {
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Service().hideKeyboard(getActivity());
+                Service.hideKeyboard(getActivity());
             }
         });
 
@@ -131,10 +131,9 @@ public class ContactFragment extends Fragment {
 
     private void getFriendListFromFireStore(){
         //Reference to find users by id
-        CollectionReference userReference = FirebaseFirestore.getInstance().collection("users");
 
         //Document names;
-        fireStoreFriendListReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FireStoreDataReference.getFriendListReference().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (!task.getResult().isEmpty()){
@@ -146,11 +145,14 @@ public class ContactFragment extends Fragment {
                     }
 
                     //base in ids put them into friendList
-                    userReference.whereIn("id", idList).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    FireStoreDataReference.getUsersReference()
+                            .whereIn("id", idList)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                                friendList.add(new FriendData(documentSnapshot.getString("id"),documentSnapshot.getString("name")));
+                                friendList.add(new FriendData(documentSnapshot.getString("id"), documentSnapshot.getString("name")));
                             }
                             updateView();
                         }

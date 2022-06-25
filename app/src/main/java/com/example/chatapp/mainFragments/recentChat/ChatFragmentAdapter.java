@@ -77,7 +77,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
             else
                 unread.setText(setupContent.getTotalUnread()+"");
 
-            String latestMessage = setupContent.getLatestTextName() + ": " + setupContent.getLatestText();
+            String latestMessage = setupContent.getLatestText();
             if (latestMessage.length()>40)
                 recent.setText(latestMessage.substring(0, 40) + "...");
             else

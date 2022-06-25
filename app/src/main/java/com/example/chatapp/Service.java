@@ -6,7 +6,7 @@ import android.view.inputmethod.InputMethodManager;
 public class Service {
 
 
-    public void hideKeyboard(Activity activity){
+    public static void hideKeyboard(Activity activity){
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getRootView().getWindowToken(), 0);
     }

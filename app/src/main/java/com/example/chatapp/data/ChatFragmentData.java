@@ -2,11 +2,28 @@ package com.example.chatapp.data;
 
 public class ChatFragmentData {
     int totalUnread;
-    String id, latestText, targetName, latestTextName;
+    private String id, latestText, targetName;
 
     public int getTotalUnread() {
         return totalUnread;
     }
+
+    public void setTotalUnread(int totalUnread) {
+        this.totalUnread = totalUnread;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLatestText(String latestText) {
+        this.latestText = latestText;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
 
     @Override
     public String toString() {
@@ -15,7 +32,6 @@ public class ChatFragmentData {
                 ", targetID='" + id + '\'' +
                 ", latestText='" + latestText + '\'' +
                 ", targetName='" + targetName + '\'' +
-                ", latestTextName='" + latestTextName + '\'' +
                 '}';
     }
 
@@ -27,16 +43,14 @@ public class ChatFragmentData {
         return latestText;
     }
 
-    public String getLatestTextName(){return latestTextName;}
 
     public String getTargetName(){return targetName;}
 
-    public ChatFragmentData(int totalUnread, String targetID, String targetName, String latestText, String latestTextName) {
+    public ChatFragmentData(int totalUnread, String targetID, String targetName, String latestText) {
         this.totalUnread = totalUnread;
         this.id = targetID;
         this.latestText = latestText;
         this.targetName = targetName;
-        this.latestTextName = latestTextName;
     }
 
     public ChatFragmentData(){};
