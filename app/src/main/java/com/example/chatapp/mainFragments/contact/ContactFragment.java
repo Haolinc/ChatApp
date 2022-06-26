@@ -45,7 +45,7 @@ public class ContactFragment extends Fragment {
         personalID =getActivity().getIntent().getStringExtra("id");
         text = rootView.findViewById(R.id.contact_fragment_textview);
 
-        //find friend process
+        //find friend process for find button
         rootView.findViewById(R.id.contact_fragment_add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +55,7 @@ public class ContactFragment extends Fragment {
                 }
                 else if (targetID.equals(personalID))
                     changeText("Cannot add yourself to contact!");
-                else{
+                else {
                     FireStoreDataReference.getUsersReference().whereEqualTo("id", targetID)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
