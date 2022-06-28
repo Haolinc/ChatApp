@@ -52,8 +52,9 @@ public class ChatFragment extends Fragment {
     }
 
     private void getAllRecentFromRealtimeDatabase(){
-        DatabaseReference parent = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userInfo = parent.child(PersonalInformation.id);
+        DatabaseReference userInfo = FirebaseDatabase.getInstance().getReference().child(PersonalInformation.id);
+        //going through firebase realtime
+        //to find who have chatted user
         userInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -65,7 +66,9 @@ public class ChatFragment extends Fragment {
                         continue;
                     HashMap<String, Object> newMap = (HashMap<String, Object>)  msgList.get("setUp");
                     idList.add((String)newMap.get("id"));
-                    newList.add(new ChatFragmentData((int)((long)newMap.get("totalUnread")), dataSnapshot.getKey(), "", (String)newMap.get("latestText")));
+
+                    //empty out targetName and documentID first, will find it later
+                    newList.add(new ChatFragmentData((int)((long)newMap.get("totalUnread")), dataSnapshot.getKey(), "", (String)newMap.get("latestText"), ""));
                 }
 
                 //get name from firestore to update names
@@ -79,6 +82,7 @@ public class ChatFragment extends Fragment {
                                     int count = 0;
                                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                                         newList.get(count).setTargetName(documentSnapshot.getString("name"));
+                                        newList.get(count).setTargetDocumentID(documentSnapshot.getId());
                                         count++;
                                     }
                                     messageList = newList;

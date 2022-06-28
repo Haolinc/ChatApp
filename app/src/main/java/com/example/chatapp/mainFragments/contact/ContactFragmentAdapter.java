@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chatapp.R;
+import com.example.chatapp.data.FireStorageImageService;
+import com.example.chatapp.data.UserData;
 import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.example.chatapp.data.FriendData;
 
@@ -58,14 +60,13 @@ public class ContactFragmentAdapter extends RecyclerView.Adapter {
         }
 
         private void bind(FriendData friendData){
-            image.setImageResource(R.drawable.userprofileimg);
+            FireStorageImageService.setUserIcon(image, friendData.getDocumentID());
             name.setText(friendData.getName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, ChatPageActivity.class);
-                    i.putExtra("id", friendData.getId());
-                    i.putExtra("name", friendData.getName());
+                    i.putExtra("userData", new UserData(friendData.getId(), friendData.getName(), friendData.getDocumentID()));
                     context.startActivity(i);
                 }
             });

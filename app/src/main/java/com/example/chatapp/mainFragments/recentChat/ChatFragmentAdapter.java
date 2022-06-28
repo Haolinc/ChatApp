@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
+import com.example.chatapp.data.FireStorageImageService;
+import com.example.chatapp.data.UserData;
 import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.example.chatapp.data.ChatFragmentData;
 
@@ -67,8 +69,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, ChatPageActivity.class);
-                    i.putExtra("id", setupContent.getId());
-                    i.putExtra("name", setupContent.getTargetName());
+                    i.putExtra("userData", new UserData(setupContent.getId(), setupContent.getTargetName(), setupContent.getTargetDocumentID()));
                     context.startActivity(i);
                 }
             });
@@ -83,7 +84,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
             else
                 recent.setText(latestMessage);
 
-            imageView.setImageResource(R.drawable.userprofileimg);
+            FireStorageImageService.setUserIcon(imageView, setupContent.getTargetDocumentID());
 
             name.setText(setupContent.getTargetName());
         }

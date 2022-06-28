@@ -10,7 +10,7 @@ public class DateDisplay {
         timeInPast.setTimeInMillis(recordedTime);
         year = timeInPast.get(Calendar.YEAR);
         monthWithDay = timeInPast.get(Calendar.DAY_OF_YEAR);
-        monthWithDayString = timeInPast.get(Calendar.MONTH) + "/" +timeInPast.get(Calendar.DAY_OF_MONTH);
+        monthWithDayString = timeInPast.get(Calendar.MONTH)+1 + "/" +timeInPast.get(Calendar.DAY_OF_MONTH)+ " ";
         if (timeInPast.get(Calendar.HOUR) < 10)
             time = "0"+timeInPast.get(Calendar.HOUR)+":";
         else

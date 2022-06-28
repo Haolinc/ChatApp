@@ -15,10 +15,12 @@ import android.widget.ImageView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.data.FireStorageImageService;
+import com.example.chatapp.data.FireStoreDataReference;
+import com.example.chatapp.data.PersonalInformation;
 
 public class UserIconActivity extends AppCompatActivity {
     final Uri[] filePath = new Uri[1];
-    //must be created before oncreate
+    //must be created before onCreate
     ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
         @Override
         public void onActivityResult(Uri result) {
@@ -32,7 +34,8 @@ public class UserIconActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_icon);
 
-
+        //default image
+        FireStorageImageService.setUserIcon(findViewById(R.id.user_icon_image), PersonalInformation.userDocument);
 
         //select button
         findViewById(R.id.user_icon_select_button).setOnClickListener(new View.OnClickListener() {
@@ -44,8 +47,7 @@ public class UserIconActivity extends AppCompatActivity {
         });
 
 
-        //default image
-        ((ImageView)findViewById(R.id.user_icon_image)).setImageResource(R.drawable.userprofileimg);
+
 
         //upload button
         findViewById(R.id.user_icon_upload_button).setOnClickListener(new View.OnClickListener() {

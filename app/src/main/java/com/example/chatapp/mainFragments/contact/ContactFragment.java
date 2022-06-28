@@ -152,7 +152,7 @@ public class ContactFragment extends Fragment {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                                friendList.add(new FriendData(documentSnapshot.getString("id"), documentSnapshot.getString("name")));
+                                friendList.add(new FriendData(documentSnapshot.getString("id"), documentSnapshot.getString("name"), documentSnapshot.getId()));
                             }
                             updateView();
                         }

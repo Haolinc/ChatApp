@@ -2,14 +2,18 @@ package com.example.chatapp.data;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -20,8 +24,29 @@ import java.util.UUID;
 public class FireStorageImageService {
     private final static StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("userIcon");
 
-    public static void getUserIcon(String id){
-
+    public static void setUserIcon(ImageView imageView, String documentName){
+        FireStoreDataReference.getUsersReference()
+                .document(documentName)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String imageUID = (String)documentSnapshot.get("userIcon");
+                        if (imageUID != null){
+                            storageReference.child(imageUID)
+                                    .getBytes(1024*1024)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                }
+                            });
+                        }
+                        else{
+                            imageView.setImageResource(R.drawable.userprofileimg);
+                        }
+                    }
+                });
     }
 
     public static void uploadNewUserIcon(Context context, Uri filePath){

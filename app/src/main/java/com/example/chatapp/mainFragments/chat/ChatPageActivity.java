@@ -18,6 +18,7 @@ import com.example.chatapp.data.Message;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
+import com.example.chatapp.data.UserData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
@@ -38,6 +40,7 @@ public class ChatPageActivity extends AppCompatActivity {
     private List <Message> list = new LinkedList<>();
     private ChatFragmentData setupData;
     private EditText editText;
+    private UserData targetData;
 
 
     // realtime firebase example code:
@@ -51,11 +54,11 @@ public class ChatPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_page);
-        String targetID = getIntent().getStringExtra("id");
-        String targetName = getIntent().getStringExtra("name");
-        userReference = parentReference.child(PersonalInformation.id).child(targetID);
-        receiverReference = parentReference.child(targetID).child(PersonalInformation.id);
-        getSupportActionBar().setTitle(targetName);
+        targetData = getIntent().getParcelableExtra("userData");
+        Log.d("chatpage", targetData.getDocumentID());
+        userReference = parentReference.child(PersonalInformation.id).child(targetData.getId());
+        receiverReference = parentReference.child(targetData.getId()).child(PersonalInformation.id);
+        getSupportActionBar().setTitle(targetData.getName());
         messageRecycler = findViewById(R.id.chat_page_recycle_view);
 
         //make onclick event in screen to hide keyboard
@@ -98,55 +101,57 @@ public class ChatPageActivity extends AppCompatActivity {
         findViewById(R.id.chat_page_send_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendToTarget(targetID);
+                sendToTarget();
             }
         });
     }
 
 
-    private void sendToTarget(String targetID){
+    private void sendToTarget(){
         receiverReference.child("setUp")
                 .get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 //add setup if null, otherwise update setup
                 if (dataSnapshot.getValue(ChatFragmentData.class)!= null)
-                    updateMessageDatabase(dataSnapshot.getValue(ChatFragmentData.class).getTotalUnread(), targetID);
+                    updateMessageDatabase(dataSnapshot.getValue(ChatFragmentData.class).getTotalUnread());
                 else
-                    updateMessageDatabase(0, targetID);
+                    updateMessageDatabase(0);
             }
         });
     }
 
-    private void updateMessageDatabase(int totalUnread, String targetID){
+    private void updateMessageDatabase(int totalUnread){
         long currentTime = Calendar.getInstance().getTimeInMillis();
-        String targetName = getIntent().getStringExtra("name");
-
 
         Message msg = new Message(PersonalInformation.name, editText.getText().toString(),currentTime,PersonalInformation.id);
-        setupData = new ChatFragmentData(totalUnread+1, targetID, targetName, msg.getText());
+        setupData = new ChatFragmentData(totalUnread+1, targetData.getId(), targetData.getName(), msg.getText(), targetData.getDocumentID());
 
-        //update setup for current user
+        //update message for current user
         userReference.push().setValue(msg);    // REAL-TIME DATABASE CODE
 
         //targetName needs to get from firestore
         FireStoreDataReference.getUsersReference()
-                .whereEqualTo("id", targetID)
+                .document(targetData.getDocumentID())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        setupData.setTargetName(task.getResult()
-                                .getDocuments()
-                                .get(0)
-                                .getString("name"));
-                        userReference.child("setUp").setValue(setupData);
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        String nameInDatabase = (String)task.getResult().get("name");
+                        //only change things when name is different
+                        if (nameInDatabase != null && !nameInDatabase.equals(targetData.getName())){
+                            setupData.setTargetName(nameInDatabase);
+                            targetData.setName(nameInDatabase);
+                            userReference.child("setUp").setValue(setupData);
+
+                        }
+
                     }
                 });
 
 
         //update setup for receive user
-        ChatFragmentData setupData2 = new ChatFragmentData(totalUnread+1, PersonalInformation.id, PersonalInformation.name, msg.getText());
+        ChatFragmentData setupData2 = new ChatFragmentData(totalUnread+1, PersonalInformation.id, PersonalInformation.name, msg.getText(), PersonalInformation.userDocument);
         receiverReference.push().setValue(msg);
         receiverReference.child("setUp").setValue(setupData2);
         editText.setText("");
