@@ -1,20 +1,21 @@
 TODO:
-1. hideKeyboard function            (✓)
-2. Firebase implementation          (✓)
-    a. Database storage             (✓)
-    b. Realtime                     (✓)
-3. Service implementation           (✓)
-    a. Hide keyboard if possible    (✓)
-4. Account function implementation  (✓)
-    a. Login id                     (✓)
-    b. Login password               (✓)
-5. Message class rework             (~)
-6. Fragment implementation          (~)
-    a. Setting                      (~)
-    b. Contact                      (~)
-    c. Current Messages             (~)
-7. ListView in MainActivity         ()
-    a. Display latest message       (✓)
-    b. Display other people's icon  (~)
-8. Reorganize code                  (~)
+//Features:
+1. loading screen when trying to access with network
+2. starting page with downloading user icon etc
+3. change password feature
+4. generate list of user with same name or id when searching
+5. friend request feature
+
+
+Maybe: voice chat feature
+
+//Bugs:
+1. chat activity scrolling issue
+2. issue on exiting app and re-entering app will cause unread not updating (PersonalInformation class issue?)
+3. proper image placing in all activity
+4. image not shown after finishing with image selection, need to click select image again to show the actual image
+
+
+
+
 
