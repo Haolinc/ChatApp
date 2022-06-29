@@ -1,24 +1,19 @@
 package com.example.chatapp.data;
 
 public class Message {
-    String name, text, id;
+    String text, id;
     long time;
 
 
     public Message(){
     }
 
-    public Message(String name, String text, long time, String id){
-        this.name = name;
+    public Message(String id, String text, long time){
+        this.id = id;
         this.text = text;
         this.time = time;
-        this.id = id;
     }
 
-
-    public String getName() {
-        return name;
-    }
 
     public String getText() {
         return text;

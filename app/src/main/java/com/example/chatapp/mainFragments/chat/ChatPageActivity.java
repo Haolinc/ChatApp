@@ -66,9 +66,12 @@ public class ChatPageActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Service.hideKeyboard(ChatPageActivity.this);
-                return true;
+                //need to return false in order to make it scrolling
+                return false;
             }
         });
+
+
 
         //retrieve data from database
         userReference.addValueEventListener(new ValueEventListener() {
@@ -124,8 +127,9 @@ public class ChatPageActivity extends AppCompatActivity {
     private void updateMessageDatabase(int totalUnread){
         long currentTime = Calendar.getInstance().getTimeInMillis();
 
-        Message msg = new Message(PersonalInformation.name, editText.getText().toString(),currentTime,PersonalInformation.id);
+        Message msg = new Message(PersonalInformation.id, editText.getText().toString(),currentTime);
         setupData = new ChatFragmentData(totalUnread+1, targetData.getId(), targetData.getName(), msg.getText(), targetData.getDocumentID());
+        userReference.child("setUp").setValue(setupData);
 
         //update message for current user
         userReference.push().setValue(msg);    // REAL-TIME DATABASE CODE
@@ -162,7 +166,7 @@ public class ChatPageActivity extends AppCompatActivity {
         messageAdapter = new ChatPageListAdapter(this, list);
         messageRecycler.setLayoutManager(new LinearLayoutManager(this));
         messageRecycler.setAdapter(messageAdapter);
-        messageRecycler.scrollToPosition(list.size()-1);
+        ((LinearLayoutManager)messageRecycler.getLayoutManager()).setStackFromEnd(true);
     }
 
 }

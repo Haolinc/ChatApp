@@ -39,10 +39,10 @@ public class ChatFragmentData {
     public String toString() {
         return "ChatFragmentData{" +
                 "totalUnread= " + totalUnread +
-                ", targetID= " + id + '\'' +
-                ", latestText= " + latestText + '\'' +
-                ", targetName= " + targetName + '\'' +
-                ", targetDocumentID= " + targetDocumentID + '\'' +
+                ", targetID= " + id +
+                ", latestText= " + latestText +
+                ", targetName= " + targetName +
+                ", targetDocumentID= " + targetDocumentID +
                 '}';
     }
 
