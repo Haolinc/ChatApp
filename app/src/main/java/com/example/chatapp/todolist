@@ -6,14 +6,14 @@ TODO:
 4. generate list of user with same name or id when searching
 5. friend request feature
 6. notification
+7. resize image when upload as user photo
 
 Maybe: voice chat feature
 
 //Bugs:
 1. chat activity scrolling issue (✓)
-2. issue on exiting app and re-entering app will cause unread not updating (PersonalInformation class issue?)
-3. proper image placing in all activity
-4. image not shown after finishing with image selection, need to click select image again to show the actual image
+2. issue on exiting app and re-entering app will cause unread not updating (PersonalInformation class issue?) (✓)
+3. image not shown after finishing with image selection, need to click select image again to show the actual image (✓)
 
 
 

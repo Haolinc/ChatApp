@@ -41,6 +41,7 @@ public class ChatPageActivity extends AppCompatActivity {
     private ChatFragmentData setupData;
     private EditText editText;
     private UserData targetData;
+    private ValueEventListener setZeroListener;
 
 
     // realtime firebase example code:
@@ -55,7 +56,6 @@ public class ChatPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_page);
         targetData = getIntent().getParcelableExtra("userData");
-        Log.d("chatpage", targetData.getDocumentID());
         userReference = parentReference.child(PersonalInformation.id).child(targetData.getId());
         receiverReference = parentReference.child(targetData.getId()).child(PersonalInformation.id);
         getSupportActionBar().setTitle(targetData.getName());
@@ -74,7 +74,7 @@ public class ChatPageActivity extends AppCompatActivity {
 
 
         //retrieve data from database
-        userReference.addValueEventListener(new ValueEventListener() {
+        setZeroListener = userReference.addValueEventListener(new ValueEventListener() {
             //this method will call when started
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -85,8 +85,10 @@ public class ChatPageActivity extends AppCompatActivity {
                     //ignore setup child
                     if (!dataSnapshot.getKey().equals("setUp"))
                         newList.add(dataSnapshot.getValue(Message.class));
+
                 }
                 list = newList;
+                Log.d("chatPage", PersonalInformation.id + ": called");
                 adapterSetting();
             }
 
@@ -95,6 +97,7 @@ public class ChatPageActivity extends AppCompatActivity {
 
             }
         });
+
 
 
 
@@ -109,6 +112,13 @@ public class ChatPageActivity extends AppCompatActivity {
         });
     }
 
+    //must remove the eventListener, otherwise will always set unread to 0 when login to other account
+    //after exiting the app
+    @Override
+    protected void onStop() {
+        super.onStop();
+        userReference.removeEventListener(setZeroListener);
+    }
 
     private void sendToTarget(){
         receiverReference.child("setUp")

@@ -26,6 +26,7 @@ public class UserIconActivity extends AppCompatActivity {
         public void onActivityResult(Uri result) {
             if (result != null)
                 filePath[0] = result;
+            ((ImageView)findViewById(R.id.user_icon_image)).setImageURI(filePath[0]);
         }
     });
 
@@ -42,7 +43,6 @@ public class UserIconActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 activityResultLauncher.launch("image/*");
-                ((ImageView)findViewById(R.id.user_icon_image)).setImageURI(filePath[0]);
             }
         });
 
