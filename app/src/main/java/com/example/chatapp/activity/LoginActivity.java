@@ -2,16 +2,27 @@ package com.example.chatapp.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.chatapp.Service;
 import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
@@ -60,33 +71,37 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void accountVerification(String username, String password){
-        users.whereEqualTo("id", username)
-                .whereEqualTo("password", password)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            TextView textView = findViewById(R.id.login_invalidlogin_textview);
-                            if (!task.getResult().isEmpty()){
-                                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                                PersonalInformation.name = task.getResult().getDocuments().get(0).getString("name");
-                                PersonalInformation.id = username;
-                                PersonalInformation.userDocument = task.getResult().getDocuments().get(0).getId();
-                                Log.d("userdoc", PersonalInformation.userDocument);
-                                i.putExtra("id", username);
-                                startActivity(i);
-                                finish();
+        //remember to stop after
+        if (Service.setUpLoading(this))
+            users.whereEqualTo("id", username)
+                    .whereEqualTo("password", password)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                if (!task.getResult().isEmpty()){
+                                    Intent i = new Intent(getBaseContext(), MainActivity.class);
+                                    PersonalInformation.name = task.getResult().getDocuments().get(0).getString("name");
+                                    PersonalInformation.id = username;
+                                    PersonalInformation.userDocument = task.getResult().getDocuments().get(0).getId();
+                                    Log.d("userdoc", PersonalInformation.userDocument);
+                                    i.putExtra("id", username);
+                                    startActivity(i);
+                                    finish();
+                                }
+                                else{
+                                    Toast.makeText(LoginActivity.this, "Username or password does not match", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                            else{
-                                textView.setText("Incorrect username or password");
-                                textView.setTextColor(Color.RED);
-                            }
+                            else
+                                Toast.makeText(LoginActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
+                            Service.stopLoading(LoginActivity.this);
                         }
-                        else
-                            Toast.makeText(LoginActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        else{
+            Service.setUpNetworkIssueToast(this);
+        }
 
     }
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -49,47 +50,19 @@ public class ContactFragment extends Fragment {
         rootView.findViewById(R.id.contact_fragment_add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String targetID = ((EditText)rootView.findViewById(R.id.contact_fragment_edittext)).getText().toString();
-                if (targetID.equals("")){
-                    changeText("Field cannot be empty!");
+                if (Service.setUpLoading(getContext())) {
+                    String targetID = ((EditText) rootView.findViewById(R.id.contact_fragment_edittext)).getText().toString();
+                    if (targetID.equals("")) {
+                        Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
+                    } else if (targetID.equals(personalID))
+                        Toast.makeText(getContext(), "Cannot add yourself to contact!", Toast.LENGTH_SHORT).show();
+                    else {
+                        findFriend(targetID);
+                    }
+                    Service.stopLoading(getContext());
                 }
-                else if (targetID.equals(personalID))
-                    changeText("Cannot add yourself to contact!");
-                else {
-                    FireStoreDataReference.getUsersReference().whereEqualTo("id", targetID)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (!task.getResult().isEmpty()){
-                                Intent i = new Intent(getContext(), ContactProfileActivity.class);
-                                List<DocumentSnapshot> documentList = task.getResult().getDocuments();
-                                //send intent extras
-                                i.putExtra("id", targetID);
-                                i.putExtra("name", (String) documentList.get(0).get("name"));
-                                i.putExtra("userDocument", documentList.get(0).getId());
-                                Log.d("userdoc",documentList.get(0).getId());
-                                //find if target is friend already
-                                FireStoreDataReference.getFriendListReference()
-                                        .whereEqualTo("id", targetID)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (!task.getResult().isEmpty()){
-                                                    i.putExtra("isFriend", true);
-                                                }
-                                                startActivity(i);
-
-                                            }
-                                        });
-                            }
-                            else{
-                                changeText("User not found");
-                            }
-                        }
-                    });
-                }
+                else
+                    Service.setUpNetworkIssueToast(getContext());
             }
         });
 
@@ -108,18 +81,42 @@ public class ContactFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        returnToNormalText();
         getFriendListFromFireStore();
     }
 
-    private void changeText(String changedText){
-        text.setText(changedText);
-        text.setTextColor(Color.RED);
-    }
+    private void findFriend(String targetID){
+        FireStoreDataReference.getUsersReference().whereEqualTo("id", targetID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (!task.getResult().isEmpty()) {
+                            Intent i = new Intent(getContext(), ContactProfileActivity.class);
+                            List<DocumentSnapshot> documentList = task.getResult().getDocuments();
+                            //send intent extras
+                            i.putExtra("id", targetID);
+                            i.putExtra("name", (String) documentList.get(0).get("name"));
+                            i.putExtra("userDocument", documentList.get(0).getId());
+                            Log.d("userdoc", documentList.get(0).getId());
+                            //find if target is friend already
+                            FireStoreDataReference.getFriendListReference()
+                                    .whereEqualTo("id", targetID)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (!task.getResult().isEmpty()) {
+                                                i.putExtra("isFriend", true);
+                                            }
+                                            startActivity(i);
 
-    private void returnToNormalText(){
-        text.setText("Talk Directly To User: ");
-        text.setTextColor(Color.GRAY);
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(getContext(), "User not found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void updateView(){

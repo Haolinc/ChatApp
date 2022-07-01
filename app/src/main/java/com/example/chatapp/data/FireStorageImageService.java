@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.chatapp.R;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -80,7 +81,14 @@ public class FireStorageImageService {
                             double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
                             progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
+                    })
+                    .addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+
+                        }
                     });
+
         }
         else
             Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show();

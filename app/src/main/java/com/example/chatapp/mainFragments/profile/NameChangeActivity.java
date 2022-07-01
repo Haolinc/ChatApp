@@ -40,26 +40,30 @@ public class NameChangeActivity extends AppCompatActivity {
         findViewById(R.id.name_change_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String currentName = nameChangeEdit.getText().toString();
+                if (Service.setUpLoading(NameChangeActivity.this)) {
+                    String currentName = nameChangeEdit.getText().toString();
 
-                //update name in firestore
-                FireStoreDataReference.getUsersReference().whereEqualTo("id", PersonalInformation.id)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()){
-                                    PersonalInformation.name = currentName;
-                                    Map<String, Object> updateMap = new HashMap<>();
-                                    updateMap.put("name", currentName);
-                                    FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument).update(updateMap);
-                                    Toast.makeText(NameChangeActivity.this, "Name Changed", Toast.LENGTH_SHORT).show();
-                                    finish();
+                    //update name in firestore
+                    FireStoreDataReference.getUsersReference().whereEqualTo("id", PersonalInformation.id)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        PersonalInformation.name = currentName;
+                                        Map<String, Object> updateMap = new HashMap<>();
+                                        updateMap.put("name", currentName);
+                                        FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument).update(updateMap);
+                                        Toast.makeText(NameChangeActivity.this, "Name Changed", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    } else
+                                        Toast.makeText(NameChangeActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
                                 }
-                                else
-                                    Toast.makeText(NameChangeActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            });
+                    Service.stopLoading(NameChangeActivity.this);
+                }
+                else
+                    Service.setUpNetworkIssueToast(NameChangeActivity.this);
             }
         });
     }

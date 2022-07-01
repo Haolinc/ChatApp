@@ -1,12 +1,13 @@
 TODO:
 //Features:
-1. loading screen when trying to access with network
+1. loading screen when trying to access with network (✓)
 2. starting page with downloading user icon etc
 3. change password feature
 4. generate list of user with same name or id when searching
 5. friend request feature
 6. notification
 7. resize image when upload as user photo
+8. auto login and log out
 
 Maybe: voice chat feature
 
@@ -14,6 +15,8 @@ Maybe: voice chat feature
 1. chat activity scrolling issue (✓)
 2. issue on exiting app and re-entering app will cause unread not updating (PersonalInformation class issue?) (✓)
 3. image not shown after finishing with image selection, need to click select image again to show the actual image (✓)
+4. firestorage icon image should be replaced instead of adding new one
+5. upload image set oncancel listener
 
 
 

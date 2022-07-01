@@ -47,18 +47,21 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.register_register_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String password1String = password1.getText().toString();
-                String password2String = password2.getText().toString();
-                String usernameString = username.getText().toString();
-                String nameString = name.getText().toString();
-                Log.d("password1String:", password1String);
-                Log.d("password2String:", password2String);
-                Log.d("usernameString:", usernameString);
-                if (!password1String.equals(password2String)){
-                    setTextView("Password Not Match!", Color.RED);
+                if (Service.setUpLoading(RegisterActivity.this)) {
+                    String password1String = password1.getText().toString();
+                    String password2String = password2.getText().toString();
+                    String usernameString = username.getText().toString();
+                    String nameString = name.getText().toString();
+                    if (usernameString.equals("") || nameString.equals(""))
+                        Toast.makeText(RegisterActivity.this, "Field cannot be empty!", Toast.LENGTH_SHORT).show();
+                    else if (!password1String.equals(password2String))
+                        Toast.makeText(RegisterActivity.this, "Password not match!", Toast.LENGTH_SHORT).show();
+                    else
+                        createAccount(usernameString, password1String, nameString);
+                    Service.stopLoading(RegisterActivity.this);
                 }
                 else
-                    createAccount(usernameString, password1String, nameString);
+                    Service.setUpNetworkIssueToast(RegisterActivity.this);
 
             }
         });
@@ -81,11 +84,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 map.put("id", username);
 
                                 users.document().set(map);
-                                Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Account created!", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                             else
-                                setTextView("Username Has Used!", Color.RED);
+                                Toast.makeText(RegisterActivity.this, "Username has been used!", Toast.LENGTH_SHORT).show();
                         }
                         else
                             Toast.makeText(RegisterActivity.this, "An error has occur", Toast.LENGTH_SHORT).show();
@@ -93,8 +96,4 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void setTextView(String text, int color){
-        textView.setText(text);
-        textView.setTextColor(color);
-    }
 }

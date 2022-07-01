@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.chatapp.data.ChatFragmentData;
 import com.example.chatapp.data.FireStoreDataReference;
@@ -121,17 +122,23 @@ public class ChatPageActivity extends AppCompatActivity {
     }
 
     private void sendToTarget(){
-        receiverReference.child("setUp")
-                .get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-            @Override
-            public void onSuccess(DataSnapshot dataSnapshot) {
-                //add setup if null, otherwise update setup
-                if (dataSnapshot.getValue(ChatFragmentData.class)!= null)
-                    updateMessageDatabase(dataSnapshot.getValue(ChatFragmentData.class).getTotalUnread());
-                else
-                    updateMessageDatabase(0);
-            }
-        });
+        //can only send when user have network connection
+        if (Service.setUpLoading(this)) {
+            receiverReference.child("setUp")
+                    .get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                @Override
+                public void onSuccess(DataSnapshot dataSnapshot) {
+                    //add setup if null, otherwise update setup
+                    if (dataSnapshot.getValue(ChatFragmentData.class) != null)
+                        updateMessageDatabase(dataSnapshot.getValue(ChatFragmentData.class).getTotalUnread());
+                    else
+                        updateMessageDatabase(0);
+                    Service.stopLoading(ChatPageActivity.this);
+                }
+            });
+        }
+        else
+            Toast.makeText(this, "Fail to send due to network issue", Toast.LENGTH_SHORT).show();
     }
 
     private void updateMessageDatabase(int totalUnread){
