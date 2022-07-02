@@ -21,8 +21,14 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, true);
         recyclerView = rootView.findViewById(R.id.profile_fragment_recyclerview);
-        updateView();
         return rootView;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        updateView();
     }
 
     public void updateView(){

@@ -3,7 +3,7 @@ package com.example.chatapp.mainFragments.profile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.Layout;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
+import com.example.chatapp.activity.LoginActivity;
 import com.example.chatapp.data.FireStorageImageService;
-import com.example.chatapp.data.FireStoreDataReference;
 import com.example.chatapp.data.PersonalInformation;
-import com.example.chatapp.mainFragments.profile.NameChangeActivity;
-import com.google.firebase.firestore.auth.User;
 
 public class ProfileFragmentAdapter extends RecyclerView.Adapter {
     Context context;
@@ -46,12 +44,19 @@ public class ProfileFragmentAdapter extends RecyclerView.Adapter {
                 break;
             case 2:
                 newHolder.setUpButton(2);
+                break;
+            case 3:
+                newHolder.setUpButton(3);
+                break;
+            default:
+                newHolder.setUpButton(Integer.MAX_VALUE);
+                break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 5;
     }
 
     public class ProfileAdaptor extends RecyclerView.ViewHolder {
@@ -84,6 +89,14 @@ public class ProfileFragmentAdapter extends RecyclerView.Adapter {
                     setUpText("Change User Photo");
                     startingActivity(UserIconActivity.class);
                     break;
+                case 3:
+                    setUpText("Change Password");
+                    startingActivity(PasswordChangeActivity.class);
+                    break;
+                case Integer.MAX_VALUE:
+                    setUpText("Logout");
+                    removeSharedPreference();
+                    break;
             }
         }
 
@@ -98,9 +111,24 @@ public class ProfileFragmentAdapter extends RecyclerView.Adapter {
             hidePhoto();
         }
 
+        private void removeSharedPreference(){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().clear().apply();
+                    Intent i = new Intent(context, LoginActivity.class);
+                    context.startActivity(i);
+                    ((Activity)context).finish();
+                }
+            });
+            hidePhoto();
+        }
+
         private void hidePhoto(){
             imageView.setVisibility(View.GONE);
         }
+
 
     }
 

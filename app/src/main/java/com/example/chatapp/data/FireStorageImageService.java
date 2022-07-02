@@ -1,7 +1,9 @@
 package com.example.chatapp.data;
 
+import android.app.Person;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
@@ -54,17 +56,23 @@ public class FireStorageImageService {
         if (filePath != null) {
             ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Uploading Image...");
+            progressDialog.setCanceledOnTouchOutside(true);
             progressDialog.show();
-            String uniqueID = UUID.randomUUID().toString();
-            storageReference.child(uniqueID)
-                    .putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            String uniqueID;
+            if (PersonalInformation.userIconCode == null)
+                uniqueID = UUID.randomUUID().toString();
+            else
+                uniqueID = PersonalInformation.userIconCode;
+
+            UploadTask uploadTask = storageReference.child(uniqueID).putFile(filePath);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             //update userIcon uniqueId for retrieving in firestore
                             FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument)
                                     .update("userIcon", uniqueID);
+                            PersonalInformation.userIconCode = uniqueID;
                             Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -81,13 +89,16 @@ public class FireStorageImageService {
                             double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
                             progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
-                    })
-                    .addOnCanceledListener(new OnCanceledListener() {
-                        @Override
-                        public void onCanceled() {
-
-                        }
                     });
+
+            //when cancelling the progressDialog
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    uploadTask.cancel();
+                }
+            });
+
 
         }
         else

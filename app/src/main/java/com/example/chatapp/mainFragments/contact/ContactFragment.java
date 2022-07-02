@@ -38,12 +38,10 @@ public class ContactFragment extends Fragment {
     private TextView text;
     private ContactFragmentAdapter contactFragmentAdapter;
     private List<FriendData> friendList = new LinkedList<>();
-    private String personalID;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_contact, container, true);
         friendListRecyclerView = rootView.findViewById(R.id.contact_fragment_recyclerview);
-        personalID =getActivity().getIntent().getStringExtra("id");
         text = rootView.findViewById(R.id.contact_fragment_textview);
 
         //find friend process for find button
@@ -54,7 +52,7 @@ public class ContactFragment extends Fragment {
                     String targetID = ((EditText) rootView.findViewById(R.id.contact_fragment_edittext)).getText().toString();
                     if (targetID.equals("")) {
                         Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
-                    } else if (targetID.equals(personalID))
+                    } else if (targetID.equals(PersonalInformation.id))
                         Toast.makeText(getContext(), "Cannot add yourself to contact!", Toast.LENGTH_SHORT).show();
                     else {
                         findFriend(targetID);
