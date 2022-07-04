@@ -4,6 +4,7 @@ import android.app.Person;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
@@ -53,16 +54,18 @@ public class FireStorageImageService {
     }
 
     public static void uploadNewUserIcon(Context context, Uri filePath){
+        UserInfo userInfo = new UserInfo(context);
+
         if (filePath != null) {
             ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Uploading Image...");
             progressDialog.setCanceledOnTouchOutside(true);
             progressDialog.show();
             String uniqueID;
-            if (PersonalInformation.userIconCode == null)
+            if (userInfo.getUserIconID() == null)
                 uniqueID = UUID.randomUUID().toString();
             else
-                uniqueID = PersonalInformation.userIconCode;
+                uniqueID = userInfo.getUserIconID();
 
             UploadTask uploadTask = storageReference.child(uniqueID).putFile(filePath);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -70,9 +73,9 @@ public class FireStorageImageService {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             //update userIcon uniqueId for retrieving in firestore
-                            FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument)
+                            FireStoreDataReference.getUsersReference().document(userInfo.getDocumentID())
                                     .update("userIcon", uniqueID);
-                            PersonalInformation.userIconCode = uniqueID;
+                            userInfo.setUserIconID(uniqueID);
                             Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })

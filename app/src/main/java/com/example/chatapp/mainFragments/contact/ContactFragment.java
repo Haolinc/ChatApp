@@ -20,7 +20,7 @@ import com.example.chatapp.R;
 import com.example.chatapp.Service;
 import com.example.chatapp.data.FireStoreDataReference;
 import com.example.chatapp.data.FriendData;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +52,7 @@ public class ContactFragment extends Fragment {
                     String targetID = ((EditText) rootView.findViewById(R.id.contact_fragment_edittext)).getText().toString();
                     if (targetID.equals("")) {
                         Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
-                    } else if (targetID.equals(PersonalInformation.id))
+                    } else if (targetID.equals(new UserInfo(getContext()).getID()))
                         Toast.makeText(getContext(), "Cannot add yourself to contact!", Toast.LENGTH_SHORT).show();
                     else {
                         findFriend(targetID);
@@ -97,7 +97,7 @@ public class ContactFragment extends Fragment {
                             i.putExtra("userDocument", documentList.get(0).getId());
                             Log.d("userdoc", documentList.get(0).getId());
                             //find if target is friend already
-                            FireStoreDataReference.getFriendListReference()
+                            FireStoreDataReference.getFriendListReference(getContext())
                                     .whereEqualTo("id", targetID)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -128,7 +128,7 @@ public class ContactFragment extends Fragment {
         //Reference to find users by id
 
         //Document names;
-        FireStoreDataReference.getFriendListReference().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FireStoreDataReference.getFriendListReference(getContext()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (!task.getResult().isEmpty()){

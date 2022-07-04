@@ -12,8 +12,7 @@ import android.widget.Toast;
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
 import com.example.chatapp.data.FireStoreDataReference;
-import com.example.chatapp.data.PersonalInformation;
-import com.google.firebase.firestore.SetOptions;
+import com.example.chatapp.data.UserInfo;
 
 public class PasswordChangeActivity extends AppCompatActivity {
 
@@ -43,7 +42,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
             Service.setUpNetworkIssueToast(this);
         else{
             FireStoreDataReference.getUsersReference()
-                    .document(PersonalInformation.userDocument)
+                    .document(new UserInfo(this).getDocumentID())
                     .update("password", password1);
             Toast.makeText(this, "Password Changed", Toast.LENGTH_SHORT).show();
             finish();

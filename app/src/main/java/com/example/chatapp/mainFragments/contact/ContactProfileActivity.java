@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chatapp.R;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -62,16 +62,17 @@ public class ContactProfileActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", targetID);
+                    UserInfo userInfo = new UserInfo(ContactProfileActivity.this);
 
                     //self document
                     FirebaseFirestore.getInstance()
                             .collection("users")
-                            .document(PersonalInformation.userDocument)
+                            .document(userInfo.getDocumentID())
                             .collection("friends")
                             .document()
                             .set(map);
 
-                    map.put("id", PersonalInformation.id);
+                    map.put("id", userInfo.getID());
 
                     //target document
                     FirebaseFirestore.getInstance()

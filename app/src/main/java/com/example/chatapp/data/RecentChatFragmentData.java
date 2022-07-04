@@ -3,7 +3,7 @@ package com.example.chatapp.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ChatFragmentData {
+public class RecentChatFragmentData {
     int totalUnread;
     private String id, latestText, targetName, targetDocumentID;
 
@@ -37,7 +37,7 @@ public class ChatFragmentData {
 
     @Override
     public String toString() {
-        return "ChatFragmentData{" +
+        return "RecentChatFragmentData{" +
                 "totalUnread= " + totalUnread +
                 ", targetID= " + id +
                 ", latestText= " + latestText +
@@ -57,7 +57,7 @@ public class ChatFragmentData {
 
     public String getTargetName(){return targetName;}
 
-    public ChatFragmentData(int totalUnread, String targetID, String targetName, String latestText, String targetDocumentID) {
+    public RecentChatFragmentData(int totalUnread, String targetID, String targetName, String latestText, String targetDocumentID) {
         this.totalUnread = totalUnread;
         this.id = targetID;
         this.latestText = latestText;
@@ -65,9 +65,18 @@ public class ChatFragmentData {
         this.targetDocumentID = targetDocumentID;
     }
 
+    //easier for comparison when onDataChange
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
+        RecentChatFragmentData data = (RecentChatFragmentData) o;
+        return data.getId().equals(id);
+    }
+
 
     //MUST-HAVE
-    public ChatFragmentData(){
+    public RecentChatFragmentData(){
 
     }
 

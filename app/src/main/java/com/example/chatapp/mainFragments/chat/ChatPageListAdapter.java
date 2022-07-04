@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.R;
 import com.example.chatapp.data.DateDisplay;
 import com.example.chatapp.data.Message;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ChatPageListAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position){
         Message message = messageList.get(position);
-        if (message.getId().equals(PersonalInformation.id))
+        if (message.getId().equals(new UserInfo(context).getID()))
             return SENT;
         else
             return RECEIVE;

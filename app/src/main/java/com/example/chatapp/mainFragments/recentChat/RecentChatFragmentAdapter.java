@@ -15,16 +15,16 @@ import com.example.chatapp.R;
 import com.example.chatapp.data.FireStorageImageService;
 import com.example.chatapp.data.UserData;
 import com.example.chatapp.mainFragments.chat.ChatPageActivity;
-import com.example.chatapp.data.ChatFragmentData;
+import com.example.chatapp.data.RecentChatFragmentData;
 
 import java.util.List;
 
-public class ChatFragmentAdapter extends RecyclerView.Adapter{
+public class RecentChatFragmentAdapter extends RecyclerView.Adapter{
 
-    private final List<ChatFragmentData> recentMessageList;
+    private final List<RecentChatFragmentData> recentMessageList;
     private final Context context;
 
-    public ChatFragmentAdapter(Context context, List<ChatFragmentData> recentMessageList){
+    public RecentChatFragmentAdapter(Context context, List<RecentChatFragmentData> recentMessageList){
         this.context = context;
         this.recentMessageList = recentMessageList;
     }
@@ -37,7 +37,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ChatFragmentData recentMessage = recentMessageList.get(position);
+        RecentChatFragmentData recentMessage = recentMessageList.get(position);
         ((MessageAdaptor)holder).bind(recentMessage);
     }
 
@@ -64,7 +64,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter{
         }
 
         //setup textview and onClickListener
-        private void bind(ChatFragmentData setupContent){
+        private void bind(RecentChatFragmentData setupContent){
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

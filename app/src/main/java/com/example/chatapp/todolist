@@ -5,19 +5,26 @@ TODO:
 3. change password feature (✓)
 4. generate list of user with same name or id when searching
 5. friend request feature
-6. notification
+6. notification (~)
 7. resize image when upload as user photo
 8. auto login, and log out feature (✓)
 9. download image from fire storage for cache, make the image loading faster and work offline
 
 Maybe: voice chat feature
 
+//Code Refinement
+1. refine code on retrieving data from firestore and realtime database (chatFragment, chatPageActivity)
+2. use new data structure on chatFragment, push new message to top
+
+
 //Bugs:
 1. chat activity scrolling issue (✓)
 2. issue on exiting app and re-entering app will cause unread not updating (PersonalInformation class issue?) (✓)
 3. image not shown after finishing with image selection, need to click select image again to show the actual image (✓)
 4. firestorage icon image should be replaced instead of adding new one (✓)
-5. upload image set oncancel listener (can only cancel before the task is started, which means before data start transferred)
+5. upload image set oncancel listener (can only cancel before the task is started, which means before data start transferred) (✓)
+6. change name appear correctly in chatFragment class
+7. static variable becomes null in certain condition (change to sharedPreference) (✓)
 
 
 

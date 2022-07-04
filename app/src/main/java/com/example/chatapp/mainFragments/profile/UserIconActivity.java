@@ -15,8 +15,7 @@ import android.widget.ImageView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.data.FireStorageImageService;
-import com.example.chatapp.data.FireStoreDataReference;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 
 public class UserIconActivity extends AppCompatActivity {
     final Uri[] filePath = new Uri[1];
@@ -36,7 +35,7 @@ public class UserIconActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_icon);
 
         //default image
-        FireStorageImageService.setUserIcon(findViewById(R.id.user_icon_image), PersonalInformation.userDocument);
+        FireStorageImageService.setUserIcon(findViewById(R.id.user_icon_image), new UserInfo(this).getDocumentID());
 
         //select button
         findViewById(R.id.user_icon_select_button).setOnClickListener(new View.OnClickListener() {

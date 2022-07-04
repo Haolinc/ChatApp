@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.R;
 import com.example.chatapp.activity.LoginActivity;
 import com.example.chatapp.data.FireStorageImageService;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 
 public class ProfileFragmentAdapter extends RecyclerView.Adapter {
     Context context;
@@ -68,7 +68,7 @@ public class ProfileFragmentAdapter extends RecyclerView.Adapter {
             super(itemView);
             textView = itemView.findViewById(R.id.profile_fragment_listitem_text);
             imageView = itemView.findViewById(R.id.profile_fragment_photo);
-            FireStorageImageService.setUserIcon(imageView, PersonalInformation.userDocument);
+            FireStorageImageService.setUserIcon(imageView, new UserInfo(context).getDocumentID());
             this.context = context;
         }
 

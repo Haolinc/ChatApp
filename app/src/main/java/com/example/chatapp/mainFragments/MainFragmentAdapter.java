@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.chatapp.mainFragments.recentChat.ChatFragment;
+import com.example.chatapp.mainFragments.recentChat.RecentChatFragment;
 import com.example.chatapp.mainFragments.contact.ContactFragment;
 import com.example.chatapp.mainFragments.profile.ProfileFragment;
 
@@ -23,7 +23,7 @@ public class MainFragmentAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch(position){
-            case 0 : return new ChatFragment();
+            case 0 : return new RecentChatFragment();
             case 1 : return new ContactFragment();
             case 2 : return new ProfileFragment();
         }

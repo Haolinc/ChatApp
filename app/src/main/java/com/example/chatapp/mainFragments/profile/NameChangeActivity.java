@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.example.chatapp.R;
 import com.example.chatapp.Service;
 import com.example.chatapp.data.FireStoreDataReference;
-import com.example.chatapp.data.PersonalInformation;
+import com.example.chatapp.data.UserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,9 +25,9 @@ public class NameChangeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name_change);
-
+        UserInfo userInfo = new UserInfo(this);
         EditText nameChangeEdit = findViewById(R.id.name_change_edit_text);
-        nameChangeEdit.setText(PersonalInformation.name);
+        nameChangeEdit.setText(userInfo.getName());
 
         findViewById(R.id.name_change_layout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,8 +44,8 @@ public class NameChangeActivity extends AppCompatActivity {
                     String currentName = nameChangeEdit.getText().toString();
 
                     //update name in firestore
-                    FireStoreDataReference.getUsersReference().document(PersonalInformation.userDocument).update("name", currentName);
-                    PersonalInformation.name = currentName;
+                    FireStoreDataReference.getUsersReference().document(userInfo.getDocumentID()).update("name", currentName);
+                    userInfo.setName(currentName);
                     Toast.makeText(NameChangeActivity.this, "Name Changed", Toast.LENGTH_SHORT).show();
                     Service.stopLoading(NameChangeActivity.this);
                     finish();

@@ -26,8 +26,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.Service;
-import com.example.chatapp.data.PersonalInformation;
 import com.example.chatapp.R;
+import com.example.chatapp.data.UserInfo;
 import com.example.chatapp.mainFragments.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,21 +39,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class LoginActivity extends AppCompatActivity {
 
     CollectionReference users = FirebaseFirestore.getInstance().collection("users");
-    SharedPreferences sharedPreferences;
+    UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
-        if (sharedPreferences.getString("id", null) != null){
+        userInfo = new UserInfo(this);
+        if (userInfo.getID() != null){
             Intent i = new Intent(getBaseContext(), MainActivity.class);
 
-            PersonalInformation.name = sharedPreferences.getString("name", null);
-            PersonalInformation.id = sharedPreferences.getString("id", null);
-            PersonalInformation.userDocument = sharedPreferences.getString("document", null);
-            PersonalInformation.userIconCode = sharedPreferences.getString("userIcon", null);
+//            PersonalInformation.name = sharedPreferences.getString("name", null);
+//            PersonalInformation.id = sharedPreferences.getString("id", null);
+//            PersonalInformation.userDocument = sharedPreferences.getString("documentID", null);
+//            PersonalInformation.userIconCode = sharedPreferences.getString("userIcon", null);
 
             startActivity(i);
             finish();
@@ -100,18 +100,12 @@ public class LoginActivity extends AppCompatActivity {
                                 if (!task.getResult().isEmpty()){
                                     Intent i = new Intent(getBaseContext(), MainActivity.class);
                                     DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                                    PersonalInformation.name = documentSnapshot.getString("name");
-                                    PersonalInformation.id = username;
-                                    PersonalInformation.userDocument = documentSnapshot.getId();
-                                    PersonalInformation.userIconCode = documentSnapshot.getString("userIcon");
 
                                     //put things into preference
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString("name", PersonalInformation.name);
-                                    editor.putString("id", username);
-                                    editor.putString("document", PersonalInformation.userDocument);
-                                    editor.putString("userIcon", PersonalInformation.userIconCode);
-                                    editor.apply();
+                                    userInfo.setName(documentSnapshot.getString("name"));
+                                    userInfo.setID(username);
+                                    userInfo.setDocumentID(documentSnapshot.getId());
+                                    userInfo.setUserIconID(documentSnapshot.getString("userIcon"));
 
                                     i.putExtra("id", username);
                                     startActivity(i);
