@@ -3,6 +3,7 @@ package com.example.chatapp.mainFragments.recentChat;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,7 @@ public class RecentChatFragment extends Fragment {
         userInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("recentChat", "called");
                 //when just start
                 if (messageList.size() == 0){
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()){
@@ -88,8 +90,9 @@ public class RecentChatFragment extends Fragment {
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     int count = 0;
                                     for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                                        messageList.get(count).setTargetName(documentSnapshot.getString("name"));
-                                        messageList.get(count).setTargetDocumentID(documentSnapshot.getId());
+                                        RecentChatFragmentData recentChatFragmentData = messageList.get(count);
+                                        recentChatFragmentData.setTargetName(documentSnapshot.getString("name"));
+                                        recentChatFragmentData.setTargetDocumentID(documentSnapshot.getId());
                                         count++;
                                     }
                                     updateView();
@@ -100,12 +103,12 @@ public class RecentChatFragment extends Fragment {
                 else {
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                         HashMap<String, Object> dataSnapshotValue = (HashMap<String, Object>) dataSnapshot.getValue();
-                        HashMap<String, Object> newMap = (HashMap<String, Object>) dataSnapshotValue.get("setUp");
+                        HashMap<String, Object> setUpMap = (HashMap<String, Object>) dataSnapshotValue.get("setUp");
 
-                        int totalUnreads = (int)((long)newMap.get("totalUnread"));
+                        int totalUnreads = (int)((long)setUpMap.get("totalUnread"));
                         //when no id found in list
                         if (!messageMap.containsKey(dataSnapshot.getKey())){
-                            RecentChatFragmentData chatFragment = new RecentChatFragmentData(totalUnreads, dataSnapshot.getKey(), "", (String)newMap.get("latestText"), "");
+                            RecentChatFragmentData chatFragment = new RecentChatFragmentData(totalUnreads, dataSnapshot.getKey(), "", (String)setUpMap.get("latestText"), "");
                             messageList.add(chatFragment);
                             messageMap.put(chatFragment.getId(), new Pair<>(messageList.size()-1, chatFragment.getTotalUnread()));
                             FireStoreDataReference.getUsersReference()
@@ -115,9 +118,10 @@ public class RecentChatFragment extends Fragment {
                                         @Override
                                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                                            messageList.get(messageList.size()-1).setTargetDocumentID(documentSnapshot.getId());
-                                            messageList.get(messageList.size()-1).setTargetDocumentID(documentSnapshot.getString("name"));
-                                            createNotification(messageList.get(messageList.size()-1));
+                                            RecentChatFragmentData recentChatFragmentData = messageList.get(messageList.size()-1);
+                                            recentChatFragmentData.setTargetDocumentID(documentSnapshot.getId());
+                                            recentChatFragmentData.setTargetName(documentSnapshot.getString("name"));
+                                            createNotification(recentChatFragmentData);
                                             updateView();
                                         }
                                     });
@@ -126,12 +130,29 @@ public class RecentChatFragment extends Fragment {
                         }
                         //when id is same
                         else{
-                            //but total unread is different, which means new message
-
+                            //but total unread is different, which means new message from existing user
                             if (messageMap.get(dataSnapshot.getKey()).second != totalUnreads){
-                                messageList.get(messageMap.get(dataSnapshot.getKey()).first).setTotalUnread(totalUnreads);
-                                createNotification(messageList.get(messageMap.get(dataSnapshot.getKey()).first));
-                                updateView();
+                                Log.d("unread", totalUnreads+"");
+                                FireStoreDataReference.getUsersReference()
+                                        .whereEqualTo("id", dataSnapshot.getKey())
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                Log.d("unreadInner", "called");
+                                                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                                                int pos = messageMap.get(dataSnapshot.getKey()).first;
+                                                RecentChatFragmentData recentChatFragmentData = messageList.get(pos);
+                                                recentChatFragmentData.setTotalUnread(totalUnreads);
+                                                recentChatFragmentData.setTargetDocumentID(documentSnapshot.getId());
+                                                recentChatFragmentData.setTargetName(documentSnapshot.getString("name"));
+                                                recentChatFragmentData.setLatestText((String)setUpMap.get("latestText"));
+
+                                                messageMap.put(recentChatFragmentData.getId() ,new Pair<>(pos, totalUnreads));
+                                                createNotification(recentChatFragmentData);
+                                                updateView();
+                                            }
+                                        });
                                 break;
                             }
                         }

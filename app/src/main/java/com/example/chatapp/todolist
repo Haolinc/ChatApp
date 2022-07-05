@@ -23,7 +23,7 @@ Maybe: voice chat feature
 3. image not shown after finishing with image selection, need to click select image again to show the actual image (✓)
 4. firestorage icon image should be replaced instead of adding new one (✓)
 5. upload image set oncancel listener (can only cancel before the task is started, which means before data start transferred) (✓)
-6. change name appear correctly in chatFragment class
+6. change name appear correctly in chatFragment class (✓)
 7. static variable becomes null in certain condition (change to sharedPreference) (✓)
 
 
