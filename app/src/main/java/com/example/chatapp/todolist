@@ -5,15 +5,16 @@ TODO:
 3. change password feature (✓)
 4. generate list of user with same name or id when searching
 5. friend request feature
-6. notification (~)
+6. notification (✓)
 7. resize image when upload as user photo
 8. auto login, and log out feature (✓)
 9. download image from fire storage for cache, make the image loading faster and work offline
+10. sliding effect in main activity
 
 Maybe: voice chat feature
 
 //Code Refinement
-1. refine code on retrieving data from firestore and realtime database (chatFragment, chatPageActivity)
+1. refine code on retrieving data from firestore and realtime database (chatFragment(✓), chatPageActivity)
 2. use new data structure on chatFragment, push new message to top
 
 
@@ -25,6 +26,7 @@ Maybe: voice chat feature
 5. upload image set oncancel listener (can only cancel before the task is started, which means before data start transferred) (✓)
 6. change name appear correctly in chatFragment class (✓)
 7. static variable becomes null in certain condition (change to sharedPreference) (✓)
+8. bugs in notification (✓)
 
 
 

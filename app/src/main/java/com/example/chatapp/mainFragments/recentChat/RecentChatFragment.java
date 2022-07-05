@@ -1,7 +1,10 @@
 package com.example.chatapp.mainFragments.recentChat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -22,6 +26,7 @@ import com.example.chatapp.data.DateDisplay;
 import com.example.chatapp.data.FireStoreDataReference;
 import com.example.chatapp.data.UserData;
 import com.example.chatapp.data.UserInfo;
+import com.example.chatapp.mainFragments.MainActivity;
 import com.example.chatapp.mainFragments.chat.ChatPageActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -49,6 +55,12 @@ public class RecentChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, true);
         messageRecycler = rootView.findViewById(R.id.chat_fragment_recycler_view);
+        if (getArguments() != null){
+            UserData userData = (UserData)getArguments().get("userData");
+            Intent i = new Intent(getContext(), ChatPageActivity.class);
+            i.putExtra("userData", userData);
+            startActivity(i);
+        }
         getAllRecentFromRealtimeDatabase();
 
 
@@ -213,10 +225,21 @@ public class RecentChatFragment extends Fragment {
 
     }
 
+    private void createChannel(RecentChatFragmentData data){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(data.getTargetDocumentID(), data.getTargetName(), NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("description");
+            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     private void createNotification(RecentChatFragmentData data){
         //only create when chatActivity is not visible, and the chatActivity is not with same id as this
-        if (!ChatPageActivity.active && ChatPageActivity.id != null && !ChatPageActivity.id.equals(data.getId())) {
-            Intent intent = new Intent(getContext(), ChatPageActivity.class);
+        if (!ChatPageActivity.active && ChatPageActivity.id == null || !ChatPageActivity.id.equals(data.getId())) {
+            createChannel(data);
+            Log.d("notification", "called");
+            Intent intent = new Intent(getContext(), MainActivity.class);
             intent.putExtra("userData", new UserData(data.getId(), data.getTargetName(), data.getTargetDocumentID()));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
@@ -229,7 +252,7 @@ public class RecentChatFragment extends Fragment {
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
 
-            NotificationManagerCompat.from(getContext()).notify(0, builder.build());
+            NotificationManagerCompat.from(getContext()).notify(123, builder.build());
         }
     }
 
