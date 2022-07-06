@@ -14,8 +14,9 @@ TODO:
 Maybe: voice chat feature
 
 //Code Refinement
-1. refine code on retrieving data from firestore and realtime database (chatFragment(✓), chatPageActivity)
+1. refine code on retrieving data from firestore and realtime database (chatFragment(✓), chatPageActivity(✓))
 2. use new data structure on chatFragment, push new message to top
+3. chatFragment can be refine again?
 
 
 //Bugs:
@@ -27,6 +28,7 @@ Maybe: voice chat feature
 6. change name appear correctly in chatFragment class (✓)
 7. static variable becomes null in certain condition (change to sharedPreference) (✓)
 8. bugs in notification (✓)
+9. notification appear in wrong way
 
 
 

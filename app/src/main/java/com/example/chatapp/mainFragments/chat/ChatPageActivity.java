@@ -1,12 +1,14 @@
 package com.example.chatapp.mainFragments.chat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import com.example.chatapp.data.UserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +33,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ChatPageActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;
@@ -39,7 +44,6 @@ public class ChatPageActivity extends AppCompatActivity {
     private RecentChatFragmentData setupData;
     private EditText editText;
     private UserData targetData;
-    private ValueEventListener setZeroListener;
     public static boolean active = false;
     public static String id = null;
     private UserInfo userInfo;
@@ -47,8 +51,8 @@ public class ChatPageActivity extends AppCompatActivity {
 
     // realtime firebase example code:
     DatabaseReference parentReference = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference userReference;
-    DatabaseReference receiverReference;
+    DatabaseReference userReference; //this user
+    DatabaseReference receiverReference; //receiver reference
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -74,23 +78,30 @@ public class ChatPageActivity extends AppCompatActivity {
         });
 
 
+        //CALLED TWICE ---------------------------------------------------------------------------
 
-        //retrieve data from database
-        setZeroListener = userReference.addValueEventListener(new ValueEventListener() {
-            //this method will call when started
+        //update list
+        userReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //set unread hint in recent chat page to 0 whenever start chatting
-                userReference.child("setUp").child("totalUnread").setValue(0);
-                List<Message> newList = new LinkedList<>();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    //ignore setup child
-                    if (!dataSnapshot.getKey().equals("setUp"))
-                        newList.add(dataSnapshot.getValue(Message.class));
-
-                }
-                list = newList;
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.getChildrenCount() == 3)
+                    list.add(snapshot.getValue(Message.class));
                 adapterSetting();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
@@ -98,7 +109,6 @@ public class ChatPageActivity extends AppCompatActivity {
 
             }
         });
-
 
 
 
@@ -113,13 +123,7 @@ public class ChatPageActivity extends AppCompatActivity {
         });
     }
 
-    //must remove the eventListener, otherwise will always set unread to 0 when login to other account
-    //after exiting the app
-    @Override
-    protected void onStop() {
-        super.onStop();
-        userReference.removeEventListener(setZeroListener);
-    }
+
 
     //when the current activity is active
     @Override
@@ -132,6 +136,9 @@ public class ChatPageActivity extends AppCompatActivity {
     //when this activity is not visible
     protected void onPause(){
         super.onPause();
+        //set unread hint in recent chat page to 0 whenever start chatting
+        userReference.child("setUp").child("totalUnread").setValue(0);
+
         active = false;
         id = null;
     }

@@ -1,5 +1,7 @@
 package com.example.chatapp.data;
 
+import androidx.annotation.NonNull;
+
 public class Message {
     String text, id;
     long time;
@@ -24,5 +26,11 @@ public class Message {
     }
     public String getId() {
         return id;
+    }
+
+    @NonNull
+    @Override
+    public String toString(){
+        return "text: " + text + ", time: " + time;
     }
 }
