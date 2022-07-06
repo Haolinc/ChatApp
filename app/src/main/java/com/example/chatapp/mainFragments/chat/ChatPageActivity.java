@@ -77,13 +77,11 @@ public class ChatPageActivity extends AppCompatActivity {
             }
         });
 
-
-        //CALLED TWICE ---------------------------------------------------------------------------
-
         //update list
         userReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                //only with children count 3 is MESSAGE, otherwise it is SETUP
                 if (snapshot.getChildrenCount() == 3)
                     list.add(snapshot.getValue(Message.class));
                 adapterSetting();
@@ -136,7 +134,7 @@ public class ChatPageActivity extends AppCompatActivity {
     //when this activity is not visible
     protected void onPause(){
         super.onPause();
-        //set unread hint in recent chat page to 0 whenever start chatting
+        //set unread hint in recent chat page to 0 whenever exit this activity
         userReference.child("setUp").child("totalUnread").setValue(0);
 
         active = false;
